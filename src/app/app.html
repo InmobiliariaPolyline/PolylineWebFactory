@@ -1,0 +1,45 @@
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" routerLink="/">
+      <img src="logo-polyline.png" alt="Polyline Logo" class="logo">
+      <strong>POLYLINE WebFactory</strong>
+    </a>
+
+    <nav class="nav">
+      <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+      <a routerLink="plantillas" routerLinkActive="active">Plantillas</a>
+      <a routerLink="precios" routerLinkActive="active">Precios</a>     <!-- OJO: coincide con routes -->
+      <a routerLink="cotizar" routerLinkActive="active">Cotizar</a>
+      <a routerLink="contacto" routerLinkActive="active">Contáctanos</a>
+
+      <div class="dropdown">
+        <button class="dropdown-btn" (click)="toggleDropdown($event)">
+          Noticias ▼
+        </button>
+        <div class="dropdown-content" [class.show]="dropdownOpen">
+          <a routerLink="noticias/ia-tecnologia" routerLinkActive="active">IA y Tecnología</a>
+          <a routerLink="noticias/bitcoin" routerLinkActive="active">Bitcoin</a>
+          <a routerLink="noticias/negocios" routerLinkActive="active">Negocios y más</a>
+        </div>
+      </div>
+
+      <!-- Auth links -->
+      <div class="auth-links">
+        <a routerLink="login" routerLinkActive="active" class="login-link">Iniciar Sesión</a>
+        <a routerLink="register" routerLinkActive="active" class="btn register-btn">Registrarse</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div>© {{ year() }} POLYLINE — WebFactory</div>
+    <div class="muted">Hecho con Angular</div>
+  </div>
+</footer>
+

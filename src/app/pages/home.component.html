@@ -1,0 +1,148 @@
+<section class="hero">
+  <div class="hero-container">
+    <div class="hero-content">
+      <h1>Crea tu web en minutos</h1>
+      <p class="hero-subtitle">Transforma tus ideas en una presencia online profesional con nuestra herramienta intuitiva y sin complicaciones.</p>
+      <div class="hero-cta">
+        <a routerLink="/cotizar" class="btn-primary">Empezar Gratis</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="mockup-container">
+        <div class="laptop-mockup">
+          <div class="laptop-screen">
+            <div class="website-preview">
+              <div class="preview-header">
+                <div class="preview-dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <div class="preview-url">miempresa.com</div>
+              </div>
+              <div class="preview-content">
+                <div class="preview-hero">
+                  <div class="preview-text">
+                    <div class="preview-title"></div>
+                    <div class="preview-subtitle"></div>
+                    <div class="preview-button"></div>
+                  </div>
+                  <div class="preview-image"></div>
+                </div>
+                <div class="preview-features">
+                  <div class="feature-card"></div>
+                  <div class="feature-card"></div>
+                  <div class="feature-card"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="benefits">
+  <div class="container">
+    <div class="section-header">
+      <h2>Beneficios Clave</h2>
+      <p>Descubre por qué POLYLINE es la elección ideal para tu proyecto online</p>
+    </div>
+    
+    <div class="benefits-grid">
+      <div class="benefit-item" *ngFor="let benefit of benefits">
+        <div class="benefit-icon">{{ benefit.icon }}</div>
+        <h3>{{ benefit.title }}</h3>
+        <p>{{ benefit.desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process">
+  <div class="container">
+    <div class="section-header">
+      <h2>Cómo Funciona</h2>
+    </div>
+    
+    <div class="process-steps">
+      <div class="step" *ngFor="let step of processSteps; let i = index">
+        <div class="step-number">{{ i + 1 }}</div>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="templates">
+  <div class="container">
+    <div class="section-header">
+      <h2>Plantillas Destacadas</h2>
+    </div>
+    
+    <div class="templates-grid">
+      <div class="template-card" *ngFor="let template of templates">
+        <div class="template-preview">
+          <div class="template-mockup">
+            <div class="mockup-header">
+              <div class="mockup-dots"></div>
+            </div>
+            <div class="mockup-content">
+              <div class="content-block primary"></div>
+              <div class="content-row">
+                <div class="content-block secondary"></div>
+                <div class="content-block secondary"></div>
+              </div>
+              <div class="content-block tertiary"></div>
+            </div>
+          </div>
+        </div>
+        <div class="template-info">
+          <h3>{{ template.name }}</h3>
+          <p>{{ template.desc }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="container">
+    <div class="section-header">
+      <h2>Testimonios</h2>
+    </div>
+    
+    <div class="testimonials-grid">
+      <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+        <div class="testimonial-content">
+          <p>"{{ testimonial.text }}"</p>
+        </div>
+        <div class="testimonial-author">
+          <strong>{{ testimonial.author }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat" *ngFor="let stat of stats">
+      <div class="stat-number">{{ stat.number }}</div>
+      <div class="stat-label">{{ stat.label }}</div>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="cta-content">
+    <h2>¿Listo para tener tu web automáticamente?</h2>
+    <p class="muted">Únete a cientos de empresas que ya confían en nuestra tecnología</p>
+    <div class="cta-buttons">
+      <a routerLink="/cotizar" class="btn-lg">Comenzar ahora - Gratis</a>
+      <a routerLink="/plantillas" class="btn-lg alt">Ver ejemplos reales</a>
+    </div>
+  </div>
+</section>
