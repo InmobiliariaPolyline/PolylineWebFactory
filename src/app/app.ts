@@ -1,14 +1,15 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, signal, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd, NavigationStart } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   // año para el footer
   readonly year = signal(new Date().getFullYear());
 
@@ -17,12 +18,12 @@ export class AppComponent {
   menuOpen = false;      // panel móvil (hamburguesa)
 
   toggleDropdown(event: Event) {
-    event.stopPropagation();
+    event.stopImmediatePropagation();
     this.dropdownOpen = !this.dropdownOpen;
   }
 
   toggleMenu(event: Event) {
-    event.stopPropagation();
+    event.stopImmediatePropagation();
     this.menuOpen = !this.menuOpen;
 
     // Al abrir el menú móvil, aseguramos que "Noticias" empiece cerrado
@@ -36,7 +37,15 @@ export class AppComponent {
   }
 
   // Cierre al hacer click fuera
-  constructor() {
+  constructor(private router: Router) {
     document.addEventListener('click', () => this.closeAll());
+  }
+
+  ngOnInit() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.closeAll();
+      }
+    });
   }
 }

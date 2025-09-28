@@ -1,7 +1,7 @@
 :root {
-  --brand: #2c3e50;      // azul-gris Polyline
-  --brand-2: #e74c3c;    // rojo Polyline
-  --accent: #f6b219;     // amarillo/naranja botón de tu web
+  --brand: #2c3e50;
+  --brand-2: #e74c3c;
+  --accent: #f6b219;
   --bg: #f7f8fa;
   --surface: #fff;
   --text: #1e1e1e;
@@ -13,6 +13,7 @@
 
 * { box-sizing: border-box; }
 html, body { height: 100%; }
+
 body {
   margin: 0;
   background: var(--bg);
@@ -35,12 +36,7 @@ body {
 }
 .btn:hover { filter: brightness(.95); }
 
-.btn-lg {
-  @extend .btn;
-  padding: 12px 18px;
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-}
+.btn-lg { @extend .btn; padding: 12px 18px; border-radius: 12px; box-shadow: var(--shadow); }
 .btn-lg.alt { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #fff; }
 .btn-lg.full { width: 100%; }
 
@@ -53,7 +49,9 @@ body {
 
 /* ---------- TOPBAR ---------- */
 .topbar {
-  position: sticky; top: 0; z-index: 50;
+  position: sticky;
+  top: 0;
+  z-index: 2000; /* sobre backdrop */
   background: var(--surface);
   border-bottom: 1px solid var(--border);
 
@@ -63,25 +61,20 @@ body {
 
   .nav { display: flex; gap: 14px; align-items: center; }
 
-  /* No pisar botones dentro del nav */
   .nav a:not(.btn) { color: var(--text); text-decoration: none; padding: 6px 8px; border-radius: 8px; }
   .nav a:not(.btn).active { color: var(--brand); font-weight: 700; }
 
-  /* Auth links */
   .auth-links {
     display: flex; gap: 12px; align-items: center;
     margin-left: 16px; padding-left: 16px; border-left: 1px solid var(--border);
   }
 
-  .login-link {
-    color: var(--text) !important; font-weight: 500; transition: color 0.3s ease;
-    &:hover, &.active { color: var(--brand) !important; }
-  }
+  .login-link { color: var(--text) !important; font-weight: 500; transition: color .3s ease;
+    &:hover, &.active { color: var(--brand) !important; } }
 
-  /* El botón "Registrarse" hereda .btn (naranja). Ajustes finos: */
   .register-btn {
     font-weight: 600; padding: 8px 16px; border-radius: 10px;
-    transition: all 0.3s ease; box-shadow: var(--shadow);
+    transition: all .3s ease; box-shadow: var(--shadow);
     text-decoration: none !important; border: 0 !important;
     &:hover { transform: translateY(-1px); }
   }
@@ -107,6 +100,7 @@ body {
 .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 @media (max-width: 980px) { .pricing { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 620px) { .pricing { grid-template-columns: 1fr; } }
+
 .plan { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px; box-shadow: var(--shadow); }
 .plan.hit { border-color: var(--brand-2); }
 .plan-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
@@ -118,10 +112,8 @@ body {
   max-width: 620px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border);
   border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
   label { display: block; margin-bottom: 12px; color: var(--brand); font-weight: 700; }
-  input, textarea, select {
-    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; background: #fff; color: var(--text);
-    &:focus { outline: 2px solid color-mix(in srgb, var(--brand) 30%, transparent); }
-  }
+  input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; background: #fff; color: var(--text);
+    &:focus { outline: 2px solid color-mix(in srgb, var(--brand) 30%, transparent); } }
 }
 
 /* ---------- Dropdown ---------- */
@@ -129,61 +121,35 @@ body {
 .dropdown-btn {
   background: none; border: none; color: var(--text); text-decoration: none;
   padding: 6px 8px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: inherit;
-  transition: background-color 0.3s ease;
-  &:hover { background-color: rgba(0, 0, 0, 0.05); }
+  transition: background-color .3s ease;
+  &:hover { background-color: rgba(0,0,0,.05); }
   &:focus { outline: 2px solid var(--brand); outline-offset: 2px; }
 }
 .dropdown-content {
   display: none; position: absolute; top: 100%; left: 0; background: var(--surface);
-  border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  min-width: 200px; z-index: 1000;
+  border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,.1); min-width: 200px; z-index: 1000;
   &.show { display: block; }
-  a {
-    display: block; padding: 12px 16px; color: var(--text); text-decoration: none; transition: background-color 0.3s ease;
-    &:hover { background-color: rgba(0, 0, 0, 0.05); }
-    &.active { background-color: rgba(246, 178, 25, 0.1); color: var(--brand); font-weight: 600; }
+  a { display: block; padding: 12px 16px; color: var(--text); text-decoration: none; transition: background-color .3s ease;
+    &:hover { background-color: rgba(0,0,0,.05); }
+    &.active { background-color: rgba(246,178,25,.1); color: var(--brand); font-weight: 600; }
     &:first-child { border-top-left-radius: 8px; border-top-right-radius: 8px; }
     &:last-child  { border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
   }
 }
-@media (max-width: 768px) {
-  .dropdown-content { min-width: 180px; }
-}
+@media (max-width: 768px) { .dropdown-content { min-width: 180px; } }
 
-/* ---------- HAMBURGUESA NARANJA Y CON ALTO CONTRASTE ---------- */
+/* ---------- HAMBURGUESA ---------- */
 .hamburger{
-  display: none;                 /* visible en móvil más abajo */
-  position: relative;
-  width: 42px; height: 42px;
-  cursor: pointer;
-  margin-left: auto;             /* pegada a la derecha */
-  border-radius: 12px;
-  background: var(--accent);     /* 🟧 naranja del sitio */
+  display: none; position: relative; width: 42px; height: 42px; cursor: pointer; margin-left: auto;
+  border-radius: 12px; background: var(--accent);
   border: 1px solid color-mix(in srgb, var(--accent) 55%, #000);
-  box-shadow: 0 6px 16px rgba(0,0,0,.12);
-  align-items: center; justify-content: center;
-  z-index: 1002;
+  box-shadow: 0 6px 16px rgba(0,0,0,.12); align-items: center; justify-content: center; z-index: 2100;
 }
 .hamburger:hover { filter: brightness(.96); }
 .hamburger:focus { outline: 3px solid color-mix(in srgb, var(--accent) 35%, white); outline-offset: 2px; }
-
-.hamburger span{
-  position: absolute; left: 50%;
-  width: 22px; height: 3px;      /* más gruesas para contraste */
-  border-radius: 2px;
-  background: #111;              /* contraste sobre naranja */
-  transform: translateX(-50%);
-  transition: transform .2s ease, opacity .2s ease, background .2s ease;
-}
-.hamburger span:nth-child(1){ top: 12px; }
-.hamburger span:nth-child(2){ top: 20px; }
-.hamburger span:nth-child(3){ top: 28px; }
-
-/* Estado ABIERTO: convierte a “X” y fondo oscuro */
-.hamburger[aria-expanded="true"]{
-  background: var(--brand);      /* fondo oscuro para más contraste */
-  border-color: var(--brand);
-}
+.hamburger span{ position: absolute; left: 50%; width: 22px; height: 3px; border-radius: 2px; background: #111; transform: translateX(-50%); transition: transform .2s ease, opacity .2s ease, background .2s ease; }
+.hamburger span:nth-child(1){ top: 12px; } .hamburger span:nth-child(2){ top: 20px; } .hamburger span:nth-child(3){ top: 28px; }
+.hamburger[aria-expanded="true"]{ background: var(--brand); border-color: var(--brand); }
 .hamburger[aria-expanded="true"] span{ background: #e49c0d; }
 .hamburger[aria-expanded="true"] span:nth-child(1){ top: 20px; transform: translateX(-50%) rotate(45deg); }
 .hamburger[aria-expanded="true"] span:nth-child(2){ opacity: 0; }
@@ -200,23 +166,20 @@ body {
     background: var(--surface); border-left: 1px solid var(--border);
     box-shadow: -8px 0 24px rgba(0,0,0,.08);
     padding: 12px; display: flex; flex-direction: column; align-items: stretch; gap: 8px;
-    transform: translateX(100%); transition: transform .25s ease; z-index: 1001;
+    transform: translateX(100%); transition: transform .25s ease; z-index: 2100; /* sobre el backdrop */
   }
   .topbar .nav.open{ transform: translateX(0); }
 
-  /* no pisar botones dentro del panel */
   .topbar .nav a:not(.btn){ display: block; padding: 10px 12px; border-radius: 10px; }
+  .topbar .auth-links{ display: grid; gap: 10px; margin: 8px 0 0; padding: 12px 0 0; border: 0; }
 
-  .topbar .auth-links{
-    display: grid; gap: 10px; margin: 8px 0 0; padding: 12px 0 0; border: 0;
-  }
-
-  /* dropdown dentro del panel (sin posición absoluta) */
   .dropdown-content{ position: static; border: 0; box-shadow: none; padding: 0; }
   .dropdown-btn{ text-align: left; font-weight: 700; padding: 10px 12px; }
 }
 
-/* Fondo al abrir menú (móvil) */
+/* Backdrop (debajo del header/nav) */
 .backdrop{
-  position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 1000;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.28);
+  z-index: 1500;  /* menor que .topbar/.nav/.hamburger */
 }
