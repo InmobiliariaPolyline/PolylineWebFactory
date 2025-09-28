@@ -52,7 +52,8 @@ body {
   position: sticky;
   top: 0;
   z-index: 2000; /* sobre backdrop */
-  background: transparent;
+  background: #ffffff !important;
+  //background: transparent;
   border-bottom: 1px solid var(--border);
 
   .wrap { max-width: 1200px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
