@@ -5,25 +5,38 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
-  templateUrl: './app.html',     // <-- usamos el html externo
-  styleUrl: './app.scss'         // opcional: si tienes estilos del root
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
 export class AppComponent {
-  // año expuesto para el footer (si lo quieres usar en el html)
+  // año para el footer
   readonly year = signal(new Date().getFullYear());
 
-  // Estado del dropdown
-  dropdownOpen = false;
+  // Estados UI
+  dropdownOpen = false;  // submenú "Noticias"
+  menuOpen = false;      // panel móvil (hamburguesa)
 
   toggleDropdown(event: Event) {
     event.stopPropagation();
     this.dropdownOpen = !this.dropdownOpen;
   }
 
-  // Cerrar dropdown cuando se hace click fuera
+  toggleMenu(event: Event) {
+    event.stopPropagation();
+    this.menuOpen = !this.menuOpen;
+
+    // Al abrir el menú móvil, aseguramos que "Noticias" empiece cerrado
+    if (this.menuOpen) this.dropdownOpen = false;
+  }
+
+  // Cierra menú y dropdown (úsalo en links y backdrop)
+  closeAll() {
+    this.menuOpen = false;
+    this.dropdownOpen = false;
+  }
+
+  // Cierre al hacer click fuera
   constructor() {
-    document.addEventListener('click', () => {
-      this.dropdownOpen = false;
-    });
+    document.addEventListener('click', () => this.closeAll());
   }
 }

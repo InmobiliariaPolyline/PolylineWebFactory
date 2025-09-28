@@ -1,7 +1,7 @@
 :root {
   --brand: #2c3e50;      // azul-gris Polyline
   --brand-2: #e74c3c;    // rojo Polyline
-  --accent: #f6b219;     // amarillo botón de tu web
+  --accent: #f6b219;     // amarillo/naranja botón de tu web
   --bg: #f7f8fa;
   --surface: #fff;
   --text: #1e1e1e;
@@ -24,68 +24,74 @@ body {
 .muted { color: var(--muted); }
 
 .btn {
-  display: inline-block; background: var(--accent); color: #111; font-weight: 800;
-  padding: 8px 12px; border-radius: 10px; text-decoration: none; border: 0;
+  display: inline-block;
+  background: var(--accent);
+  color: #111;
+  font-weight: 800;
+  padding: 8px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: 0;
 }
 .btn:hover { filter: brightness(.95); }
 
 .btn-lg {
   @extend .btn;
-  padding: 12px 18px; border-radius: 12px; box-shadow: var(--shadow);
+  padding: 12px 18px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
 }
 .btn-lg.alt { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #fff; }
 .btn-lg.full { width: 100%; }
 
-.section-title { font-size: clamp(24px, 3vw, 34px); text-align: center; margin: 24px 0 16px; color: var(--brand); }
+.section-title {
+  font-size: clamp(24px, 3vw, 34px);
+  text-align: center;
+  margin: 24px 0 16px;
+  color: var(--brand);
+}
 
+/* ---------- TOPBAR ---------- */
 .topbar {
-  position: sticky; top: 0; z-index: 50; background: var(--surface); border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 50;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+
   .wrap { max-width: 1200px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
   .brand { color: var(--brand); text-decoration: none; display: flex; align-items: center; gap: 8px; }
-  .logo { width: 28px; height: 28px; display: grid; place-items: center; background: var(--accent); color: #111; border-radius: 6px; font-size: 14px; }
+  .logo  { width: 28px; height: 28px; display: grid; place-items: center; background: var(--accent); color: #111; border-radius: 6px; font-size: 14px; }
+
   .nav { display: flex; gap: 14px; align-items: center; }
-  .nav a { color: var(--text); text-decoration: none; padding: 6px 8px; border-radius: 8px; }
-  .nav a.active { color: var(--brand); font-weight: 700; }
-  
-  // Auth links styles
+
+  /* No pisar botones dentro del nav */
+  .nav a:not(.btn) { color: var(--text); text-decoration: none; padding: 6px 8px; border-radius: 8px; }
+  .nav a:not(.btn).active { color: var(--brand); font-weight: 700; }
+
+  /* Auth links */
   .auth-links {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    margin-left: 16px;
-    padding-left: 16px;
-    border-left: 1px solid var(--border);
+    display: flex; gap: 12px; align-items: center;
+    margin-left: 16px; padding-left: 16px; border-left: 1px solid var(--border);
   }
-  
+
   .login-link {
-    color: var(--text) !important;
-    font-weight: 500;
-    transition: color 0.3s ease;
-    
-    &:hover, &.active {
-      color: var(--brand) !important;
-    }
+    color: var(--text) !important; font-weight: 500; transition: color 0.3s ease;
+    &:hover, &.active { color: var(--brand) !important; }
   }
-  
+
+  /* El botón "Registrarse" hereda .btn (naranja). Ajustes finos: */
   .register-btn {
-    background: var(--brand) !important;
-    color: white !important;
-    font-weight: 600;
-    padding: 8px 16px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      background: var(--brand-2) !important;
-      transform: translateY(-1px);
-    }
+    font-weight: 600; padding: 8px 16px; border-radius: 10px;
+    transition: all 0.3s ease; box-shadow: var(--shadow);
+    text-decoration: none !important; border: 0 !important;
+    &:hover { transform: translateY(-1px); }
   }
 }
 
+/* ---------- FOOTER ---------- */
 .footer { margin-top: 60px; border-top: 1px solid var(--border); background: var(--surface); }
 .footer .wrap { max-width: 1200px; margin: 0 auto; padding: 22px 16px; display: flex; gap: 12px; align-items: center; justify-content: space-between; }
 
-/* Helpers para tarjetas y grids (reusables) */
+/* ---------- Tarjetas ---------- */
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 @media (max-width: 980px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 620px) { .grid-3 { grid-template-columns: 1fr; } }
@@ -118,81 +124,99 @@ body {
   }
 }
 
-/* Dropdown styles */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
+/* ---------- Dropdown ---------- */
+.dropdown { position: relative; display: inline-block; }
 .dropdown-btn {
-  background: none;
-  border: none;
-  color: var(--text);
-  text-decoration: none;
-  padding: 6px 8px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
+  background: none; border: none; color: var(--text); text-decoration: none;
+  padding: 6px 8px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: inherit;
   transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-
-  &:focus {
-    outline: 2px solid var(--brand);
-    outline-offset: 2px;
-  }
+  &:hover { background-color: rgba(0, 0, 0, 0.05); }
+  &:focus { outline: 2px solid var(--brand); outline-offset: 2px; }
 }
-
 .dropdown-content {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
-  z-index: 1000;
-
-  &.show {
-    display: block;
-  }
-
+  display: none; position: absolute; top: 100%; left: 0; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  min-width: 200px; z-index: 1000;
+  &.show { display: block; }
   a {
-    display: block;
-    padding: 12px 16px;
-    color: var(--text);
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.05);
-    }
-
-    &.active {
-      background-color: rgba(246, 178, 25, 0.1);
-      color: var(--brand);
-      font-weight: 600;
-    }
-
-    &:first-child {
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-    }
-
-    &:last-child {
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
-    }
+    display: block; padding: 12px 16px; color: var(--text); text-decoration: none; transition: background-color 0.3s ease;
+    &:hover { background-color: rgba(0, 0, 0, 0.05); }
+    &.active { background-color: rgba(246, 178, 25, 0.1); color: var(--brand); font-weight: 600; }
+    &:first-child { border-top-left-radius: 8px; border-top-right-radius: 8px; }
+    &:last-child  { border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
   }
 }
-
 @media (max-width: 768px) {
-  .dropdown-content {
-    min-width: 180px;
+  .dropdown-content { min-width: 180px; }
+}
+
+/* ---------- HAMBURGUESA NARANJA Y CON ALTO CONTRASTE ---------- */
+.hamburger{
+  display: none;                 /* visible en móvil más abajo */
+  position: relative;
+  width: 42px; height: 42px;
+  cursor: pointer;
+  margin-left: auto;             /* pegada a la derecha */
+  border-radius: 12px;
+  background: var(--accent);     /* 🟧 naranja del sitio */
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, #000);
+  box-shadow: 0 6px 16px rgba(0,0,0,.12);
+  align-items: center; justify-content: center;
+  z-index: 1002;
+}
+.hamburger:hover { filter: brightness(.96); }
+.hamburger:focus { outline: 3px solid color-mix(in srgb, var(--accent) 35%, white); outline-offset: 2px; }
+
+.hamburger span{
+  position: absolute; left: 50%;
+  width: 22px; height: 3px;      /* más gruesas para contraste */
+  border-radius: 2px;
+  background: #111;              /* contraste sobre naranja */
+  transform: translateX(-50%);
+  transition: transform .2s ease, opacity .2s ease, background .2s ease;
+}
+.hamburger span:nth-child(1){ top: 12px; }
+.hamburger span:nth-child(2){ top: 20px; }
+.hamburger span:nth-child(3){ top: 28px; }
+
+/* Estado ABIERTO: convierte a “X” y fondo oscuro */
+.hamburger[aria-expanded="true"]{
+  background: var(--brand);      /* fondo oscuro para más contraste */
+  border-color: var(--brand);
+}
+.hamburger[aria-expanded="true"] span{ background: #e49c0d; }
+.hamburger[aria-expanded="true"] span:nth-child(1){ top: 20px; transform: translateX(-50%) rotate(45deg); }
+.hamburger[aria-expanded="true"] span:nth-child(2){ opacity: 0; }
+.hamburger[aria-expanded="true"] span:nth-child(3){ top: 20px; transform: translateX(-50%) rotate(-45deg); }
+
+/* ---------- Panel móvil / tablet ---------- */
+@media (max-width: 992px){
+  .topbar .wrap { padding-right: 8px; }
+  .hamburger{ display: inline-flex; }
+
+  .topbar .nav{
+    position: fixed; top: 64px; right: 0;
+    width: min(86vw, 320px); height: calc(100dvh - 64px);
+    background: var(--surface); border-left: 1px solid var(--border);
+    box-shadow: -8px 0 24px rgba(0,0,0,.08);
+    padding: 12px; display: flex; flex-direction: column; align-items: stretch; gap: 8px;
+    transform: translateX(100%); transition: transform .25s ease; z-index: 1001;
   }
+  .topbar .nav.open{ transform: translateX(0); }
+
+  /* no pisar botones dentro del panel */
+  .topbar .nav a:not(.btn){ display: block; padding: 10px 12px; border-radius: 10px; }
+
+  .topbar .auth-links{
+    display: grid; gap: 10px; margin: 8px 0 0; padding: 12px 0 0; border: 0;
+  }
+
+  /* dropdown dentro del panel (sin posición absoluta) */
+  .dropdown-content{ position: static; border: 0; box-shadow: none; padding: 0; }
+  .dropdown-btn{ text-align: left; font-weight: 700; padding: 10px 12px; }
+}
+
+/* Fondo al abrir menú (móvil) */
+.backdrop{
+  position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 1000;
 }

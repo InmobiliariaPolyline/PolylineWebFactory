@@ -5,30 +5,36 @@
       <strong>POLYLINE WebFactory</strong>
     </a>
 
-    <nav class="nav">
-      <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
-      <a routerLink="plantillas" routerLinkActive="active">Plantillas</a>
-      <a routerLink="precios" routerLinkActive="active">Precios</a>     <!-- OJO: coincide con routes -->
-      <a routerLink="cotizar" routerLinkActive="active">Cotizar</a>
-      <a routerLink="contacto" routerLinkActive="active">Contáctanos</a>
+  <!-- botón -->
+<button
+  class="hamburger"
+  aria-label="Abrir menú"
+  [attr.aria-expanded]="menuOpen"
+  (click)="toggleMenu($event)">
+  <span></span><span></span><span></span>
+</button>
+    <!-- menú -->
+<nav class="nav" [class.open]="menuOpen">
+  <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeAll()">Inicio</a>
+  <a routerLink="plantillas" routerLinkActive="active" (click)="closeAll()">Plantillas</a>
+  <a routerLink="precios" routerLinkActive="active" (click)="closeAll()">Precios</a>
+  <a routerLink="cotizar" routerLinkActive="active" (click)="closeAll()">Cotizar</a>
+  <a routerLink="contacto" routerLinkActive="active" (click)="closeAll()">Contáctanos</a>
 
-      <div class="dropdown">
-        <button class="dropdown-btn" (click)="toggleDropdown($event)">
-          Noticias ▼
-        </button>
-        <div class="dropdown-content" [class.show]="dropdownOpen">
-          <a routerLink="noticias/ia-tecnologia" routerLinkActive="active">IA y Tecnología</a>
-          <a routerLink="noticias/bitcoin" routerLinkActive="active">Bitcoin</a>
-          <a routerLink="noticias/negocios" routerLinkActive="active">Negocios y más</a>
-        </div>
-      </div>
+  <div class="dropdown">
+    <button class="dropdown-btn" (click)="toggleDropdown($event)">Noticias ▼</button>
+    <div class="dropdown-content" [class.show]="dropdownOpen">
+      <a routerLink="noticias/ia-tecnologia" routerLinkActive="active" (click)="closeAll()">IA y Tecnología</a>
+      <a routerLink="noticias/bitcoin" routerLinkActive="active" (click)="closeAll()">Bitcoin</a>
+      <a routerLink="noticias/negocios" routerLinkActive="active" (click)="closeAll()">Negocios y más</a>
+    </div>
+  </div>
 
-      <!-- Auth links -->
-      <div class="auth-links">
-        <a routerLink="login" routerLinkActive="active" class="login-link">Iniciar Sesión</a>
-        <a routerLink="register" routerLinkActive="active" class="btn register-btn">Registrarse</a>
-      </div>
-    </nav>
+  <div class="auth-links">
+    <a routerLink="login" routerLinkActive="active" class="login-link" (click)="closeAll()">Iniciar Sesión</a>
+    <a routerLink="register" routerLinkActive="active" class="btn register-btn" (click)="closeAll()">Registrarse</a>
+  </div>
+</nav>
   </div>
 </header>
 
