@@ -1,43 +1,29 @@
+// src/app/services/news.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 export interface NewsArticle {
   title: string;
-  description: string;
+  description: string | null;
   url: string;
-  urlToImage: string;
+  urlToImage: string | null;
   publishedAt: string;
-  source: {
-    name: string;
-  };
+  source: { name: string };
 }
+export interface NewsResponse { articles: NewsArticle[]; }
 
-export interface NewsResponse {
-  articles: NewsArticle[];
-}
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class NewsService {
-  private apiKey = 'TU_API_KEY_AQUI'; // Reemplaza con tu API key de NewsAPI
-  private baseUrl = 'https://newsapi.org/v2';
+  private baseUrl = '/.netlify/functions/rss';
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  getTechNews(): Observable<NewsResponse> {
-    const url = `${this.baseUrl}/everything?q=tecnologia+OR+inteligencia+artificial+OR+IA&language=es&sortBy=publishedAt&apiKey=${this.apiKey}`;
-    return this.http.get<NewsResponse>(url);
+  private toResponse(category: string): Observable<NewsResponse> {
+    return this.http.get<NewsArticle[]>(`${this.baseUrl}?category=${category}`)
+      .pipe(map(list => ({ articles: list })));
   }
 
-  getBitcoinNews(): Observable<NewsResponse> {
-    const url = `${this.baseUrl}/everything?q=bitcoin+OR+cryptocurrency+OR+criptomonedas&language=es&sortBy=publishedAt&apiKey=${this.apiKey}`;
-    return this.http.get<NewsResponse>(url);
-  }
-
-  getBusinessNews(): Observable<NewsResponse> {
-    const url = `${this.baseUrl}/everything?q=negocios+OR+economia+OR+empresa&language=es&sortBy=publishedAt&apiKey=${this.apiKey}`;
-    return this.http.get<NewsResponse>(url);
-  }
+  getTechNews(): Observable<NewsResponse>    { return this.toResponse('tech'); }
+  getBitcoinNews(): Observable<NewsResponse> { return this.toResponse('bitcoin'); }
+  getBusinessNews(): Observable<NewsResponse>{ return this.toResponse('business'); }
 }
