@@ -239,6 +239,222 @@
   }
 }
 
+// Video Presentation Section
+.video-presentation {
+  padding: 80px 0;
+  background: white;
+  width: 100%;
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .video-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .video-wrapper {
+    position: relative;
+    background: #000;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    aspect-ratio: 16/9;
+    
+    .presentation-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+    
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+      
+      .play-button {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: scale(1.1);
+          background: white;
+        }
+        
+        .play-icon {
+          width: 32px;
+          height: 32px;
+          color: var(--primary-color);
+          transition: all 0.3s ease;
+          
+          svg {
+            width: 100%;
+            height: 100%;
+          }
+          
+          &.playing {
+            transform: scale(0.8);
+          }
+        }
+      }
+      
+      .video-info {
+        text-align: center;
+        color: white;
+        
+        h3 {
+          font-size: 24px;
+          font-weight: 600;
+          margin-bottom: 8px;
+        }
+        
+        p {
+          font-size: 16px;
+          opacity: 0.9;
+        }
+      }
+    }
+    
+    .video-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+      padding: 20px;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      
+      &.visible {
+        transform: translateY(0);
+      }
+      
+      .progress-bar {
+        position: relative;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        
+        .progress {
+          height: 100%;
+          background: var(--primary-color);
+          border-radius: 2px;
+          transition: width 0.1s ease;
+        }
+        
+        .progress-handle {
+          position: absolute;
+          top: 50%;
+          width: 12px;
+          height: 12px;
+          background: var(--primary-color);
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        
+        &:hover .progress-handle {
+          opacity: 1;
+        }
+      }
+      
+      .controls-row {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        
+        .control-btn {
+          background: none;
+          border: none;
+          color: white;
+          cursor: pointer;
+          padding: 8px;
+          border-radius: 4px;
+          transition: background 0.3s ease;
+          
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+          }
+          
+          svg {
+            width: 20px;
+            height: 20px;
+          }
+        }
+        
+        .time-display {
+          color: white;
+          font-size: 14px;
+          font-family: monospace;
+          margin-left: auto;
+          margin-right: 15px;
+        }
+        
+        .volume-control {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          
+          .volume-slider {
+            width: 60px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+            
+            &::-webkit-slider-thumb {
+              appearance: none;
+              width: 12px;
+              height: 12px;
+              background: var(--primary-color);
+              border-radius: 50%;
+              cursor: pointer;
+            }
+            
+            &::-moz-range-thumb {
+              width: 12px;
+              height: 12px;
+              background: var(--primary-color);
+              border-radius: 50%;
+              border: none;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 // Benefits Section
 .benefits {
   padding: 80px 0;
@@ -583,6 +799,7 @@
 }
 
 // Responsive Design
+
 @media (max-width: 768px) {
   .hero {
     padding: 60px 0;
@@ -593,6 +810,67 @@
       text-align: center;
       padding: 0 20px;
     }
+  }
+  
+  .video-presentation {
+    padding: 60px 0;
+    
+    .video-container {
+      gap: 30px;
+    }
+    
+    .video-wrapper {
+      .video-overlay {
+        .play-button {
+          width: 60px;
+          height: 60px;
+          
+          .play-icon {
+            width: 24px;
+            height: 24px;
+          }
+        }
+        
+        .video-info {
+          h3 {
+            font-size: 20px;
+          }
+          
+          p {
+            font-size: 14px;
+          }
+        }
+      }
+      
+      .video-controls {
+        padding: 15px;
+        
+        .controls-row {
+          gap: 10px;
+          
+          .time-display {
+            font-size: 12px;
+            margin-right: 10px;
+          }
+          
+          .volume-control {
+            .volume-slider {
+              width: 40px;
+            }
+          }
+          
+          .control-btn {
+            padding: 6px;
+            
+            svg {
+              width: 16px;
+              height: 16px;
+            }
+          }
+        }
+      }
+    }
+    
   }
   
   .section-header {

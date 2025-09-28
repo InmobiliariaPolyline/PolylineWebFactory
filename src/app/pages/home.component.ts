@@ -1,15 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, NgFor],
+  imports: [RouterLink, NgFor, NgIf],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements AfterViewInit {
+  @ViewChild('presentationVideo') videoRef!: ElementRef<HTMLVideoElement>;
+  
+  // Video state
+  isPlaying = false;
+  isMuted = false;
+  currentTime = 0;
+  duration = 0;
+  progress = 0;
+  volume = 100;
   benefits = [
     { title: 'Rápido', desc: 'Lanza tu sitio web en tiempo récord con nuestra interfaz amigable.', icon: '⚡' },
     { title: 'Personalizable', desc: 'Adapta cada detalle a tu gusto con opciones flexibles y sencillas.', icon: '🎨' },
@@ -69,4 +78,104 @@ export class HomeComponent {
       author: 'Carlos López, Diseñador'
     }
   ];
+
+  ngAfterViewInit() {
+    if (this.videoRef) {
+      const video = this.videoRef.nativeElement;
+      video.addEventListener('loadedmetadata', () => {
+        this.duration = video.duration;
+      });
+    }
+  }
+
+  // Video control methods
+  playVideo() {
+    if (this.videoRef) {
+      this.videoRef.nativeElement.play();
+      this.isPlaying = true;
+    }
+  }
+
+  togglePlayPause() {
+    if (this.videoRef) {
+      const video = this.videoRef.nativeElement;
+      if (video.paused) {
+        video.play();
+        this.isPlaying = true;
+      } else {
+        video.pause();
+        this.isPlaying = false;
+      }
+    }
+  }
+
+  onVideoEnded() {
+    this.isPlaying = false;
+    this.progress = 0;
+    this.currentTime = 0;
+  }
+
+  onTimeUpdate() {
+    if (this.videoRef) {
+      const video = this.videoRef.nativeElement;
+      this.currentTime = video.currentTime;
+      this.progress = (video.currentTime / video.duration) * 100;
+    }
+  }
+
+  seekTo(event: MouseEvent) {
+    if (this.videoRef) {
+      const video = this.videoRef.nativeElement;
+      const progressBar = event.currentTarget as HTMLElement;
+      const rect = progressBar.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const percentage = clickX / rect.width;
+      const newTime = percentage * video.duration;
+      
+      video.currentTime = newTime;
+      this.currentTime = newTime;
+      this.progress = percentage * 100;
+    }
+  }
+
+  toggleMute() {
+    if (this.videoRef) {
+      const video = this.videoRef.nativeElement;
+      video.muted = !video.muted;
+      this.isMuted = video.muted;
+    }
+  }
+
+  setVolume(event: Event) {
+    if (this.videoRef) {
+      const target = event.target as HTMLInputElement;
+      const volumeValue = parseInt(target.value);
+      const video = this.videoRef.nativeElement;
+      
+      video.volume = volumeValue / 100;
+      this.volume = volumeValue;
+      this.isMuted = volumeValue === 0;
+    }
+  }
+
+  toggleFullscreen() {
+    if (this.videoRef) {
+      const video = this.videoRef.nativeElement;
+      if (video.requestFullscreen) {
+        video.requestFullscreen();
+      } else if ((video as any).webkitRequestFullscreen) {
+        (video as any).webkitRequestFullscreen();
+      } else if ((video as any).msRequestFullscreen) {
+        (video as any).msRequestFullscreen();
+      }
+    }
+  }
+
+  formatTime(seconds: number): string {
+    if (isNaN(seconds)) return '0:00';
+    
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
 }
