@@ -4,9 +4,10 @@ import { NewsService, NewsArticle } from '../../services/news';
 
 @Component({
   selector: 'app-news-ai-tecnologia',
+  standalone:true,
   imports: [CommonModule],
   templateUrl: './news-ai-tecnologia.html',
-  styleUrl: './news-ai-tecnologia.scss'
+  styleUrls: ['./news-ai-tecnologia.scss']
 })
 export class NewsAiTecnologia implements OnInit {
   articles: NewsArticle[] = [];

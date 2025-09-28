@@ -5,8 +5,9 @@ import { NewsService, NewsArticle } from '../../services/news';
 @Component({
   selector: 'app-news-negocios',
   imports: [CommonModule],
+  standalone:true,
   templateUrl: './news-negocios.html',
-  styleUrl: './news-negocios.scss'
+  styleUrls: ['./news-negocios.scss']
 })
 export class NewsNegocios implements OnInit {
   articles: NewsArticle[] = [];
