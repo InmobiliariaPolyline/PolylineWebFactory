@@ -1,12 +1,10 @@
 [build]
-  base = "PolylineWebFactory"                # <- Debe existir exactamente
-  command = "npm ci && npm run build"
-  publish = "dist/Polyline-Development/browser"  # usa el name exacto de angular.json
-  functions = "../netlify/functions"         # si tus functions están en la raíz del repo
+  command = "cd PolylineWebFactory && npm ci && npm run build"
+  publish = "PolylineWebFactory/dist/Polyline-Development/browser" # respeta el name/casing
+  functions = "netlify/functions"
 
-[[plugins]]
-  package = "@netlify/angular-runtime"
-
+# (Opcional) si el plugin te molesta con el publish, elimínalo en la UI de Netlify
+# o quítalo de netlify.toml si lo tuvieras aquí.
 [[redirects]]
   from = "/*"
   to = "/index.html"
