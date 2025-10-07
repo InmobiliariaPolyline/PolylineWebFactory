@@ -1,6 +1,6 @@
 [build]
-  command = "cd PolylineWebFactory && npm ci && npm run build"
-  publish = "PolylineWebFactory/dist/Polyline-Development/browser" # respeta el name/casing
+  command = "npm ci && npm run build"
+  publish = "dist/Polyline-Development/browser"
   functions = "netlify/functions"
 
 # (Opcional) si el plugin te molesta con el publish, elimínalo en la UI de Netlify
