@@ -24,5 +24,10 @@ export const routes: Routes = [
   { path: 'noticias/negocios', component: NewsNegocios, title: 'Negocios y Economía | POLYLINE' },
   { path: 'login', component: LoginComponent, title: 'Iniciar Sesión | POLYLINE' },
   { path: 'register', component: RegisterComponent, title: 'Crear Cuenta | POLYLINE' },
+  { 
+    path: 'plantilla/:slug', 
+    loadComponent: () => import('./demo/demo.component').then(m => m.DemoComponent),
+    title: 'Demo | POLYLINE'
+  },
   { path: '**', redirectTo: '' },
 ];

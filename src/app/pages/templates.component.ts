@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ViewContainerRef, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-
-type TemplateItem = { id:number; name:string; descr:string; img:string; tags:string[] };
+import { TEMPLATES, TemplateMeta } from '../templates/templates.data';
+import { PreviewRegistryService } from '../templates/preview/preview-registry.service';
 
 @Component({
   selector: 'app-templates',
@@ -12,21 +11,72 @@ type TemplateItem = { id:number; name:string; descr:string; img:string; tags:str
   templateUrl: './templates.component.html',
   styleUrls: ['./templates.component.scss']
 })
-export class TemplatesComponent {
+export class TemplatesComponent implements AfterViewInit {
+  @ViewChild('previewHost', { read: ViewContainerRef }) previewHost!: ViewContainerRef;
+  
   q = '';
-  templates: TemplateItem[] = [
-    { id:1, name:'Restaurante', descr:'Menús y reservas', img:'assets/tpl/restaurant.jpg', tags:['restaurante','food'] },
-    { id:2, name:'Hotel', descr:'Habitaciones y booking', img:'assets/tpl/hotel.jpg', tags:['hotel','booking'] },
-    // ...
-  ];
+  selectedCategory = 'Todas';
+  showPreview = false;
+  selectedTemplate: TemplateMeta | null = null;
+  
+  // Usar el array centralizado de templates
+  templates: TemplateMeta[] = TEMPLATES;
 
-  get filtered(): TemplateItem[] {
-    const q = this.q.toLowerCase().trim();
-    if (!q) return this.templates;
-    return this.templates.filter(t =>
-      (t.name + ' ' + t.descr + ' ' + t.tags.join(' ')).toLowerCase().includes(q)
-    );
+  constructor(private previewRegistry: PreviewRegistryService) {}
+
+  ngAfterViewInit() {
+    // ViewContainerRef estará listo después de la vista
   }
 
-  trackById = (_: number, t: TemplateItem) => t.id;
+  get filtered(): TemplateMeta[] {
+    let filtered = this.templates;
+    
+    // Filtrar por categoría
+    if (this.selectedCategory !== 'Todas') {
+      filtered = filtered.filter(t => t.category === this.selectedCategory);
+    }
+    
+    // Filtrar por búsqueda
+    const q = this.q.toLowerCase().trim();
+    if (q) {
+      filtered = filtered.filter(t =>
+        (t.name + ' ' + t.desc + ' ' + t.features.join(' ')).toLowerCase().includes(q)
+      );
+    }
+    
+    return filtered;
+  }
+
+  trackById = (_: number, t: TemplateMeta) => t.id;
+
+  selectCategory(category: string) {
+    this.selectedCategory = category;
+  }
+
+  async openPreview(template: TemplateMeta) {
+    this.selectedTemplate = template;
+    this.showPreview = true;
+    
+    // Esperar al siguiente ciclo para que el ViewContainerRef esté disponible
+    setTimeout(async () => {
+      if (this.previewHost && template.type) {
+        await this.previewRegistry.createIn(this.previewHost, template.type, template);
+      }
+    }, 0);
+  }
+
+  closePreview() {
+    this.showPreview = false;
+    this.selectedTemplate = null;
+    if (this.previewHost) {
+      this.previewHost.clear();
+    }
+  }
+
+  useTemplate(template: TemplateMeta) {
+    // Aquí puedes implementar la lógica para usar la plantilla
+    console.log('Usando plantilla:', template.name);
+    // Por ejemplo, redirigir a un formulario de configuración
+    // o abrir un modal de configuración
+  }
 }

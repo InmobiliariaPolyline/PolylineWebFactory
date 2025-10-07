@@ -1,10 +1,11 @@
 <section class="hero">
   <div class="hero-container">
     <div class="hero-content">
-      <h1>Crea tu web en minutos</h1>
-      <p class="hero-subtitle">Transforma tus ideas en una presencia online profesional con nuestra herramienta intuitiva y sin complicaciones.</p>
+      <h1>Plantillas Profesionales para tu Web</h1>
+      <p class="hero-subtitle">Elige entre nuestras plantillas diseñadas por expertos y crea tu sitio web profesional en minutos, sin complicaciones.</p>
       <div class="hero-cta">
-        <a routerLink="/cotizar" class="btn-primary">Empezar Gratis</a>
+        <a routerLink="/cotizar" class="btn-primary">Ver Plantillas</a>
+        <a routerLink="/plantillas" class="btn-secondary">Explorar Todas</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -43,88 +44,105 @@
   </div>
 </section>
 
-<!-- Video Presentation Section -->
-<section class="video-presentation">
+<!-- Templates Section - Now Featured First -->
+<section class="templates featured">
   <div class="container">
     <div class="section-header">
-      <h2>Descubre cómo funciona POLYLINE</h2>
-      <p>Mira en acción cómo puedes crear tu sitio web profesional en minutos</p>
+      <h2>Plantillas Profesionales Listas para Usar</h2>
+      <p>Elige entre nuestras plantillas diseñadas por expertos y personalízalas según tus necesidades</p>
     </div>
     
-    <div class="video-container">
-      <div class="video-wrapper">
-        <video 
-          #presentationVideo
-          class="presentation-video"
-          poster="assets/video-poster.jpg"
-          (click)="togglePlayPause()"
-          (ended)="onVideoEnded()"
-          (timeupdate)="onTimeUpdate()">
-          <source src="./assets/presentation-video.mp4" type="video/mp4">
-          <source src="assets/presentation-video.webm" type="video/webm">
-          Tu navegador no soporta la reproducción de video.
-        </video>
-        
-        <!-- Video Overlay -->
-        <div class="video-overlay" [class.hidden]="isPlaying" (click)="playVideo()">
-          <div class="play-button">
-            <div class="play-icon" [class.playing]="isPlaying">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
+    <!-- Carousel Container -->
+    <div class="carousel-container" 
+         (mouseenter)="onMouseEnter()" 
+         (mouseleave)="onMouseLeave()">
+      
+      <!-- Botón Anterior -->
+      <button class="carousel-btn prev" 
+              (click)="prevSlide()"
+              [disabled]="isTransitioning"
+              aria-label="Anterior">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <!-- Templates Track -->
+      <div class="carousel-track">
+        <div class="templates-grid" 
+             [style.transform]="transformValue">
+          
+          <div class="template-card" *ngFor="let template of extendedTemplates; let i = index">
+            <div class="template-preview">
+              <div class="template-mockup">
+                <div class="mockup-header">
+                  <div class="mockup-dots"></div>
+                </div>
+                
+                <!-- Screenshot personalizada -->
+                <div class="mockup-screenshot" *ngIf="template.previewImage">
+                  <img [src]="'templates/' + template.previewImage" 
+                       [alt]="template.name + ' preview'"
+                       loading="lazy">
+                </div>
+                
+                <!-- Fallback a bloques de color si no hay imagen -->
+                <div class="mockup-content" *ngIf="!template.previewImage">
+                  <div class="content-block primary"></div>
+                  <div class="content-row">
+                    <div class="content-block secondary"></div>
+                    <div class="content-block secondary"></div>
+                  </div>
+                  <div class="content-block tertiary"></div>
+                </div>
+              </div>
+              <div class="template-category">{{ template.category }}</div>
+              
+              <!-- Overlay on Hover -->
+              <div class="overlay">
+                <button class="btn-preview" (click)="openTemplatePreview(template)">
+                  Vista Rápida
+                </button>
+              </div>
+            </div>
+            
+            <div class="template-info">
+              <h3>{{ template.name }}</h3>
             </div>
           </div>
           
-        </div>
-        
-        <!-- Video Controls -->
-        <div class="video-controls" [class.visible]="isPlaying">
-          <div class="progress-bar" (click)="seekTo($event)">
-            <div class="progress" [style.width.%]="progress"></div>
-            <div class="progress-handle" [style.left.%]="progress"></div>
-          </div>
-          
-          <div class="controls-row">
-            <button class="control-btn" (click)="togglePlayPause()">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path *ngIf="!isPlaying" d="M8 5v14l11-7z"/>
-                <path *ngIf="isPlaying" d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
-              </svg>
-            </button>
-            
-            <div class="time-display">
-              <span>{{ formatTime(currentTime) }}</span>
-              <span>/</span>
-              <span>{{ formatTime(duration) }}</span>
-            </div>
-            
-            <div class="volume-control">
-              <button class="control-btn" (click)="toggleMute()">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path *ngIf="!isMuted" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                  <path *ngIf="isMuted" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-                </svg>
-              </button>
-              <input 
-                type="range" 
-                class="volume-slider" 
-                min="0" 
-                max="100" 
-                [value]="volume"
-                (input)="setVolume($event)">
-            </div>
-            
-            <button class="control-btn" (click)="toggleFullscreen()">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
+
+      <!-- Botón Siguiente -->
+      <button class="carousel-btn next" 
+              (click)="nextSlide()"
+              [disabled]="isTransitioning"
+              aria-label="Siguiente">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+
+      <!-- Indicadores -->
+      <div class="carousel-indicators">
+        <button *ngFor="let slide of [].constructor(totalSlides); let i = index"
+                class="indicator"
+                [class.active]="currentSlide === i"
+                (click)="goToSlide(i)"
+                [attr.aria-label]="'Ir a diapositiva ' + (i + 1)">
+        </button>
+      </div>
+
+    </div>
+    
+    <div class="templates-cta">
+      <a routerLink="/plantillas" class="btn-secondary">Ver todas las plantillas</a>
     </div>
   </div>
 </section>
+
+
 
 <section class="benefits">
   <div class="container">
@@ -159,37 +177,6 @@
   </div>
 </section>
 
-<section class="templates">
-  <div class="container">
-    <div class="section-header">
-      <h2>Plantillas Destacadas</h2>
-    </div>
-    
-    <div class="templates-grid">
-      <div class="template-card" *ngFor="let template of templates">
-        <div class="template-preview">
-          <div class="template-mockup">
-            <div class="mockup-header">
-              <div class="mockup-dots"></div>
-            </div>
-            <div class="mockup-content">
-              <div class="content-block primary"></div>
-              <div class="content-row">
-                <div class="content-block secondary"></div>
-                <div class="content-block secondary"></div>
-              </div>
-              <div class="content-block tertiary"></div>
-            </div>
-          </div>
-        </div>
-        <div class="template-info">
-          <h3>{{ template.name }}</h3>
-          <p>{{ template.desc }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section class="testimonials">
   <div class="container">
@@ -229,3 +216,53 @@
     </div>
   </div>
 </section>
+
+<!-- Template Preview Modal -->
+<div class="template-modal" [class.active]="isModalOpen" (click)="closeModal($event)">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ selectedTemplate?.name }}</h3>
+      <button class="close-btn" (click)="closeModal()">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="view-controls">
+        <button class="view-btn" [class.active]="currentView === 'desktop'" (click)="setView('desktop')">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 12H3V4h18v10z"/>
+          </svg>
+          Escritorio
+        </button>
+        <button class="view-btn" [class.active]="currentView === 'mobile'" (click)="setView('mobile')">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17 1.01L7 1c-1.1 0-1.99.9-1.99 2v18c0 1.1.89 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
+          </svg>
+          Móvil
+        </button>
+      </div>
+      
+      <div class="preview-container" [class.mobile-view]="currentView === 'mobile'">
+        <ng-template #previewHost></ng-template>
+      </div>
+      
+      <div class="modal-footer">
+        <div class="template-info-modal">
+          <h4>{{ selectedTemplate?.name }}</h4>
+          <p>{{ selectedTemplate?.desc }}</p>
+          <div class="template-features-modal">
+            <span class="feature-tag" *ngFor="let feature of selectedTemplate?.features">{{ feature }}</span>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-modal secondary" (click)="closeModal()">Cerrar</button>
+          <button class="btn-modal tertiary" (click)="viewFullDemo()">Ver demo completa</button>
+          <a routerLink="/cotizar" class="btn-modal primary" (click)="closeModal()">Usar esta plantilla</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
