@@ -1,7 +1,6 @@
 [build]
-  base = "PolylineWebFactory"
-  command = "npm ci && npm run build"
-  publish = "dist/Polyline-Development/browser"
+  command = "cd PolylineWebFactory && npm ci && npm run build"
+  publish = "PolylineWebFactory/dist/polyline-development/browser"
   functions = "netlify/functions"
 
 [[redirects]]
