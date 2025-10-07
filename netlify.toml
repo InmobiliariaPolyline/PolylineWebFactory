@@ -1,7 +1,11 @@
 [build]
-  command = "cd PolylineWebFactory && npm ci && npm run build"
-  publish = "PolylineWebFactory/dist/polyline-development/browser"
+  base = "PolylineWebFactory"
+  command = "npm ci && npm run build"
+  publish = "dist/Polyline-Development/browser"  # <-- respeta el casing que pida el plugin
   functions = "netlify/functions"
+
+[[plugins]]
+  package = "@netlify/angular-runtime"
 
 [[redirects]]
   from = "/*"
