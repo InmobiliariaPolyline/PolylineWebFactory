@@ -4,9 +4,10 @@ import { NewsService, NewsArticle } from '../../services/news';
 
 @Component({
   selector: 'app-news-bitcoin',
+  standalone:true,
   imports: [CommonModule],
   templateUrl: './news-bitcoin.html',
-  styleUrl: './news-bitcoin.scss'
+  styleUrls: ['./news-bitcoin.scss']
 })
 export class NewsBitcoin implements OnInit {
   articles: NewsArticle[] = [];

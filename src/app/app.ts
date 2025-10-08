@@ -1,5 +1,5 @@
-import { Component, signal, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd, NavigationStart } from '@angular/router';
+import { Component, signal, OnInit, HostListener } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationStart } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,42 +10,41 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app.scss'
 })
 export class AppComponent implements OnInit {
-  // año para el footer
   readonly year = signal(new Date().getFullYear());
 
   // Estados UI
-  dropdownOpen = false;  // submenú "Noticias"
-  menuOpen = false;      // panel móvil (hamburguesa)
+  dropdownOpen = false;   // submenú "Noticias"
+  menuOpen = false;       // panel móvil (hamburguesa)
 
   toggleDropdown(event: Event) {
-    event.stopImmediatePropagation();
+    event.stopPropagation();
     this.dropdownOpen = !this.dropdownOpen;
   }
 
   toggleMenu(event: Event) {
-    event.stopImmediatePropagation();
+    event.stopPropagation();
     this.menuOpen = !this.menuOpen;
-
-    // Al abrir el menú móvil, aseguramos que "Noticias" empiece cerrado
-    if (this.menuOpen) this.dropdownOpen = false;
+    if (this.menuOpen) this.dropdownOpen = false; // "Noticias" inicia cerrado
   }
 
-  // Cierra menú y dropdown (úsalo en links y backdrop)
   closeAll() {
     this.menuOpen = false;
     this.dropdownOpen = false;
   }
 
-  // Cierre al hacer click fuera
-  constructor(private router: Router) {
-    document.addEventListener('click', () => this.closeAll());
+  // Cierra al navegar para que el panel no quede abierto
+  constructor(private router: Router) {}
+  ngOnInit() {
+    this.router.events.subscribe((e) => {
+      if (e instanceof NavigationStart) this.closeAll();
+    });
   }
 
-  ngOnInit() {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        this.closeAll();
-      }
-    });
+  // Cierra si haces clic fuera del menú/hamburguesa; ignora clics dentro
+  @HostListener('document:click', ['$event'])
+  onDocClick(ev: MouseEvent) {
+    const t = ev.target as HTMLElement;
+    if (t.closest('.nav') || t.closest('.hamburger')) return; // clic dentro => no cerrar
+    this.closeAll();
   }
 }
