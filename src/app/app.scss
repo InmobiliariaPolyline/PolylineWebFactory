@@ -52,12 +52,32 @@ body {
   position: sticky;
   top: 0;
   z-index: 2000; /* sobre backdrop */
-  background: var(--surface);
+  background: #ffffff !important;
+  //background: transparent;
   border-bottom: 1px solid var(--border);
 
   .wrap { max-width: 1200px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
-  .brand { color: var(--brand); text-decoration: none; display: flex; align-items: center; gap: 8px; }
-  .logo  { width: 28px; height: 28px; display: grid; place-items: center; background: var(--accent); color: #111; border-radius: 6px; font-size: 14px; }
+  .brand { 
+    color: var(--brand); 
+    text-decoration: none; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px;
+    background: transparent !important;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+  }
+  .logo  { 
+    width: 28px; 
+    height: 28px; 
+    display: grid; 
+    place-items: center; 
+    background: var(--accent) !important; 
+    color: #111; 
+    border-radius: 6px; 
+    font-size: 14px; 
+  }
 
   .nav { display: flex; gap: 14px; align-items: center; }
 
@@ -141,7 +161,7 @@ body {
 /* ---------- HAMBURGUESA ---------- */
 .hamburger{
   display: none; position: relative; width: 42px; height: 42px; cursor: pointer; margin-left: auto;
-  border-radius: 12px; background: var(--accent);
+  border-radius: 12px; background: #ffffff !important;
   border: 1px solid color-mix(in srgb, var(--accent) 55%, #000);
   box-shadow: 0 6px 16px rgba(0,0,0,.12); align-items: center; justify-content: center; z-index: 2100;
 }
@@ -149,7 +169,7 @@ body {
 .hamburger:focus { outline: 3px solid color-mix(in srgb, var(--accent) 35%, white); outline-offset: 2px; }
 .hamburger span{ position: absolute; left: 50%; width: 22px; height: 3px; border-radius: 2px; background: #111; transform: translateX(-50%); transition: transform .2s ease, opacity .2s ease, background .2s ease; }
 .hamburger span:nth-child(1){ top: 12px; } .hamburger span:nth-child(2){ top: 20px; } .hamburger span:nth-child(3){ top: 28px; }
-.hamburger[aria-expanded="true"]{ background: var(--brand); border-color: var(--brand); }
+.hamburger[aria-expanded="true"]{ background: #ffffff !important; border-color: var(--brand); }
 .hamburger[aria-expanded="true"] span{ background: #e49c0d; }
 .hamburger[aria-expanded="true"] span:nth-child(1){ top: 20px; transform: translateX(-50%) rotate(45deg); }
 .hamburger[aria-expanded="true"] span:nth-child(2){ opacity: 0; }
@@ -163,7 +183,7 @@ body {
   .topbar .nav{
     position: fixed; top: 64px; right: 0;
     width: min(86vw, 320px); height: calc(100dvh - 64px);
-    background: var(--surface); border-left: 1px solid var(--border);
+    background: #ffffff !important; border-left: 1px solid var(--border);
     box-shadow: -8px 0 24px rgba(0,0,0,.08);
     padding: 12px; display: flex; flex-direction: column; align-items: stretch; gap: 8px;
     transform: translateX(100%); transition: transform .25s ease; z-index: 2100; /* sobre el backdrop */
