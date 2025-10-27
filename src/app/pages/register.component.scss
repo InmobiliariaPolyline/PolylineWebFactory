@@ -1,11 +1,27 @@
 :host {
-  --primary-color: #4f46e5;
-  --secondary-color: #6b7280;
-  --background-light: #f8f9ff;
-  --text-dark: #1a1a2e;
-  --border-color: #e5e7eb;
+  --primary-color: #0ea5e9;
+  --secondary-color: #06b6d4;
+  --accent-color: #10b981;
+  --dark-blue: #1e40af;
+  --light-cyan: #67e8f9;
+  --mint-green: #34d399;
+  --electric-blue: #3b82f6;
+  --turquoise: #14b8a6;
+  --background-light: #f0f9ff;
+  --text-dark: #0f172a;
+  --border-color: #bae6fd;
   --success-color: #10b981;
   --error-color: #ef4444;
+  --gradient-hero: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 50%, #81d4fa 100%);
+  --gradient-templates: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  --gradient-benefits: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+  --gradient-process: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+  --gradient-testimonials: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+  --gradient-stats: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #10b981 100%);
+  --gradient-cta: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 50%, #10b981 100%);
+  --glow-primary: 0 0 20px rgba(14, 165, 233, 0.4);
+  --glow-secondary: 0 0 20px rgba(6, 182, 212, 0.4);
+  --glow-accent: 0 0 20px rgba(16, 185, 129, 0.4);
   display: block;
   width: 100%;
   margin: 0;
@@ -19,21 +35,68 @@
 }
 
 .auth-hero {
-  background: linear-gradient(135deg, #f8f9ff 0%, #e6f0ff 100%);
+  background: var(--gradient-hero);
   min-height: 100vh;
   display: flex;
   align-items: center;
   padding: 40px 0;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      radial-gradient(circle at 20% 80%, rgba(55, 65, 81, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(75, 85, 99, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(107, 114, 128, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 60% 20%, rgba(156, 163, 175, 0.1) 0%, transparent 40%);
+    pointer-events: none;
+    animation: float 6s ease-in-out infinite;
+    z-index: 1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="register-tech-pattern" width="25" height="25" patternUnits="userSpaceOnUse"><circle cx="12.5" cy="12.5" r="1.5" fill="rgba(55,65,81,0.15)"/><circle cx="12.5" cy="12.5" r="0.5" fill="rgba(75,85,99,0.2)"/><path d="M12.5 12.5 L17.5 12.5 L17.5 17.5 L12.5 17.5 Z" stroke="rgba(107,114,128,0.1)" stroke-width="0.5" fill="none"/></pattern></defs><rect width="100" height="100" fill="url(%23register-tech-pattern)"/></svg>');
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 1;
+  }
 }
 
 .auth-container {
   max-width: 520px; // Más ancho para el registro
   margin: 0 auto;
-  background: white;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 249, 255, 0.95));
   border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--border-color);
+  padding: 50px;
+  box-shadow: 0 20px 60px rgba(14, 165, 233, 0.15);
+  border: 1px solid rgba(14, 165, 233, 0.1);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 2;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+    border-radius: 20px 20px 0 0;
+  }
 }
 
 .auth-header {
@@ -48,9 +111,13 @@
 .logo h1 {
   font-size: 28px;
   font-weight: 800;
-  color: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 0;
   letter-spacing: -0.5px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .logo span {
@@ -66,6 +133,8 @@
   font-weight: 700;
   color: var(--text-dark);
   margin: 0 0 8px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.01em;
 }
 
 .auth-header p {
@@ -110,7 +179,7 @@
       outline: none;
       border-color: var(--primary-color);
       background: white;
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
     }
     
     &::placeholder {
@@ -182,7 +251,7 @@
     }
     
     input[type="checkbox"]:checked + .checkmark {
-      background: var(--primary-color);
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       border-color: var(--primary-color);
       
       &::after {
@@ -201,9 +270,14 @@
   .link {
     color: var(--primary-color);
     text-decoration: none;
-    
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.01em;
+    transition: all 0.3s ease;
+
     &:hover {
+      color: var(--secondary-color);
       text-decoration: underline;
+      transform: translateY(-1px);
     }
   }
 }
@@ -224,13 +298,32 @@
   margin-bottom: 16px;
   
   &.primary {
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
-    
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.01em;
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
     &:hover {
-      background: #4338ca;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 30px rgba(14, 165, 233, 0.4);
+
+      &::before {
+        left: 100%;
+      }
     }
     
     .arrow {
@@ -250,7 +343,9 @@
     
     &:hover {
       border-color: var(--primary-color);
-      background: rgba(79, 70, 229, 0.05);
+      background: rgba(14, 165, 233, 0.05);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(14, 165, 233, 0.1);
     }
   }
 }
@@ -282,9 +377,13 @@
     color: var(--primary-color);
     text-decoration: none;
     font-weight: 600;
-    
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.01em;
+    transition: all 0.3s ease;
+
     &:hover {
-      color: #4338ca;
+      color: var(--secondary-color);
+      transform: translateY(-1px);
     }
   }
 }

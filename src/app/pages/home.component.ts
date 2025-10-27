@@ -95,6 +95,20 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
+  onVideoPlay() {
+    this.isPlaying = true;
+  }
+
+  onVideoPause() {
+    this.isPlaying = false;
+  }
+
+  onVideoLoaded() {
+    if (this.videoRef) {
+      this.duration = this.videoRef.nativeElement.duration;
+    }
+  }
+
   ngOnInit() {
     this.startAutoPlay();
   }

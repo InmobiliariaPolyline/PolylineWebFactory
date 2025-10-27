@@ -1,18 +1,18 @@
 :root {
-  --brand: #6366f1;
-  --brand-2: #8b5cf6;
-  --brand-3: #06b6d4;
-  --accent: #f59e0b;
-  --accent-2: #ef4444;
-  --bg: #fafafa;
-  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  --brand: #0ea5e9; // Azul cielo vibrante
+  --brand-2: #06b6d4; // Cian brillante
+  --brand-3: #10b981; // Verde esmeralda
+  --accent: #34d399; // Verde menta
+  --accent-2: #14b8a6; // Turquesa
+  --bg: #f0f9ff; // Fondo azul muy claro
+  --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
   --surface: #ffffff;
-  --surface-2: #f8fafc;
-  --text: #1e293b;
-  --text-light: #64748b;
-  --muted: #94a3b8;
-  --border: #e2e8f0;
-  --border-light: #f1f5f9;
+  --surface-2: #f0f9ff;
+  --text: #0f172a; // Texto azul oscuro
+  --text-light: #64748b; // Texto azul claro
+  --muted: #94a3b8; // Texto muted
+  --border: #bae6fd; // Bordes azules claros
+  --border-light: #e0f2fe; // Bordes muy claros
   --radius: 16px;
   --radius-lg: 24px;
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -112,13 +112,42 @@ body {
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 2000; /* sobre backdrop */
-  background: rgba(255, 255, 255, 0.95) !important;
+  z-index: 5000; /* sobre backdrop */
+  background: linear-gradient(135deg, rgba(224, 242, 254, 0.95) 0%, rgba(179, 229, 252, 0.95) 50%, rgba(129, 212, 250, 0.95) 100%) !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-light);
-  box-shadow: 0 4px 40px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(186, 230, 253, 0.3);
+  box-shadow: 0 4px 40px rgba(14, 165, 233, 0.15);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 30%, rgba(6, 182, 212, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 60% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+    animation: navbarGlow 8s ease-in-out infinite;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="navbar-tech" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="rgba(14,165,233,0.1)"/><circle cx="20" cy="20" r="0.3" fill="rgba(6,182,212,0.08)"/></pattern></defs><rect width="100" height="100" fill="url(%23navbar-tech)"/></svg>');
+    opacity: 0.4;
+    pointer-events: none;
+  }
 
   .wrap {
     max-width: 1200px;
@@ -139,11 +168,21 @@ body {
     border: none;
     box-shadow: none;
     transition: all 0.3s ease;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+
+    strong {
+      font-weight: 800;
+      font-size: 1.1em;
+    }
 
     &:hover {
       transform: translateY(-1px);
     }
   }
+
+
   .logo  {
     width: 40px;
     height: 40px;
@@ -166,19 +205,24 @@ body {
     padding: 8px 12px;
     border-radius: 10px;
     transition: all 0.3s ease;
-    font-weight: 500;
+    font-weight: 600;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.01em;
     position: relative;
+    z-index: 1;
 
     &:hover {
-      background: rgba(79, 70, 229, 0.1);
-      color: var(--brand);
+      background: rgba(14, 165, 233, 0.15);
+      color: #0ea5e9;
       transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
     }
 
     &.active {
-      color: var(--brand);
+      color: #0ea5e9;
       font-weight: 700;
-      background: rgba(79, 70, 229, 0.1);
+      background: rgba(14, 165, 233, 0.15);
+      box-shadow: 0 2px 8px rgba(14, 165, 233, 0.15);
     }
 
     &::after {
@@ -188,9 +232,10 @@ body {
       left: 50%;
       width: 0;
       height: 2px;
-      background: var(--brand);
+      background: linear-gradient(90deg, #0ea5e9, #06b6d4, #10b981);
       transition: all 0.3s ease;
       transform: translateX(-50%);
+      border-radius: 1px;
     }
 
     &:hover::after,
@@ -204,24 +249,43 @@ body {
     margin-left: 16px; padding-left: 16px; border-left: 1px solid var(--border);
   }
 
-  .login-link { color: var(--text) !important; font-weight: 500; transition: color .3s ease;
+  .login-link { color: var(--text) !important; font-weight: 600; font-family: 'Inter', system-ui, -apple-system, sans-serif; letter-spacing: -0.01em; transition: color .3s ease;
     &:hover, &.active { color: var(--brand) !important; } }
 
   .register-btn {
-    font-weight: 600;
+    font-weight: 700;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.01em;
     padding: 10px 20px;
     border-radius: 12px;
     transition: all 0.3s ease;
     box-shadow: var(--shadow);
     text-decoration: none !important;
     border: 0 !important;
-    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    background: linear-gradient(135deg, #0ea5e9, #06b6d4, #10b981);
     color: white;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
-      background: linear-gradient(135deg, #c0392b, #e74c3c);
+      box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);
+      background: linear-gradient(135deg, #0284c7, #0ea5e9, #06b6d4);
+
+      &::before {
+        left: 100%;
+      }
     }
   }
 }
@@ -229,6 +293,8 @@ body {
 /* ---------- FOOTER ---------- */
 .footer { margin-top: 60px; border-top: 1px solid var(--border); background: var(--surface); }
 .footer .wrap { max-width: 1200px; margin: 0 auto; padding: 22px 16px; display: flex; gap: 12px; align-items: center; justify-content: space-between; }
+
+
 
 /* ---------- Tarjetas ---------- */
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -266,18 +332,18 @@ body {
 .dropdown { position: relative; display: inline-block; }
 .dropdown-btn {
   background: none; border: none; color: var(--text); text-decoration: none;
-  padding: 6px 8px; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: inherit;
+  padding: 6px 8px; border-radius: 8px; cursor: pointer; font-family: 'Inter', system-ui, -apple-system, sans-serif; font-size: inherit; font-weight: 600; letter-spacing: -0.01em;
   transition: background-color .3s ease;
   &:hover { background-color: rgba(0,0,0,.05); }
   &:focus { outline: 2px solid var(--brand); outline-offset: 2px; }
 }
 .dropdown-content {
   display: none; position: absolute; top: 100%; left: 0; background: var(--surface);
-  border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,.1); min-width: 200px; z-index: 1000;
+  border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,.1); min-width: 200px; z-index: 4000;
   &.show { display: block; }
   a { display: block; padding: 12px 16px; color: var(--text); text-decoration: none; transition: background-color .3s ease;
-    &:hover { background-color: rgba(0,0,0,.05); }
-    &.active { background-color: rgba(246,178,25,.1); color: var(--brand); font-weight: 600; }
+    &:hover { background-color: rgba(14, 165, 233, 0.1); color: #0ea5e9; }
+    &.active { background-color: rgba(14, 165, 233, 0.15); color: #0ea5e9; font-weight: 600; }
     &:first-child { border-top-left-radius: 8px; border-top-right-radius: 8px; }
     &:last-child  { border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
   }
@@ -289,7 +355,7 @@ body {
   display: none; position: relative; width: 42px; height: 42px; cursor: pointer; margin-left: auto;
   border-radius: 12px; background: #ffffff !important;
   border: 1px solid color-mix(in srgb, var(--accent) 55%, #000);
-  box-shadow: 0 6px 16px rgba(0,0,0,.12); align-items: center; justify-content: center; z-index: 2100;
+  box-shadow: 0 6px 16px rgba(0,0,0,.12); align-items: center; justify-content: center; z-index: 5100;
 }
 .hamburger:hover { filter: brightness(.96); }
 .hamburger:focus { outline: 3px solid color-mix(in srgb, var(--accent) 35%, white); outline-offset: 2px; }
@@ -309,18 +375,21 @@ body {
   .topbar .nav{
     position: fixed; top: 64px; right: 0;
     width: min(86vw, 320px); height: calc(100dvh - 64px);
-    background: #ffffff !important; border-left: 1px solid var(--border);
-    box-shadow: -8px 0 24px rgba(0,0,0,.08);
+    background: linear-gradient(135deg, rgba(224, 242, 254, 0.98) 0%, rgba(179, 229, 252, 0.98) 100%) !important;
+    border-left: 1px solid rgba(186, 230, 253, 0.3);
+    box-shadow: -8px 0 24px rgba(14, 165, 233, 0.15);
     padding: 12px; display: flex; flex-direction: column; align-items: stretch; gap: 8px;
-    transform: translateX(100%); transition: transform .25s ease; z-index: 2100; /* sobre el backdrop */
+    transform: translateX(100%); transition: transform .25s ease; z-index: 5100; /* sobre el backdrop */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
   .topbar .nav.open{ transform: translateX(0); }
 
-  .topbar .nav a:not(.btn){ display: block; padding: 10px 12px; border-radius: 10px; }
+  .topbar .nav a:not(.btn){ display: block; padding: 10px 12px; border-radius: 10px; font-weight: 600; font-family: 'Inter', system-ui, -apple-system, sans-serif; letter-spacing: -0.01em; }
   .topbar .auth-links{ display: grid; gap: 10px; margin: 8px 0 0; padding: 12px 0 0; border: 0; }
 
-  .dropdown-content{ position: static; border: 0; box-shadow: none; padding: 0; }
-  .dropdown-btn{ text-align: left; font-weight: 700; padding: 10px 12px; }
+  .dropdown-content{ position: static; border: 0; box-shadow: none; padding: 0; background: transparent; }
+  .dropdown-btn{ text-align: left; font-weight: 700; font-family: 'Inter', system-ui, -apple-system, sans-serif; letter-spacing: -0.01em; padding: 10px 12px; }
 }
 
 /* Backdrop (debajo del header/nav) */
@@ -328,4 +397,14 @@ body {
   position: fixed; inset: 0;
   background: rgba(0,0,0,.28);
   z-index: 1500;  /* menor que .topbar/.nav/.hamburger */
+}
+
+/* Animación para el navbar */
+@keyframes navbarGlow {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
 }
