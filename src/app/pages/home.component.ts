@@ -13,6 +13,7 @@ import { PreviewRegistryService } from '../templates/preview/preview-registry.se
 })
 export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('presentationVideo') videoRef!: ElementRef<HTMLVideoElement>;
+  @ViewChild('videoElement', { static: true }) videoElementRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('previewHost', { read: ViewContainerRef }) previewHost!: ViewContainerRef;
   
   // Video state
@@ -163,16 +164,63 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   ];
 
   ngAfterViewInit() {
+    // Priorizar el video hero
+    if (this.videoElementRef) {
+      const video = this.videoElementRef.nativeElement;
+
+      // Configurar video inmediatamente
+      video.muted = true;
+      video.preload = 'auto';
+
+      // Evento cuando el video puede empezar a reproducir
+      video.addEventListener('canplay', () => {
+        console.log('Video listo para reproducir');
+        // Intentar reproducir inmediatamente cuando esté listo
+        video.play().then(() => {
+          console.log('Video hero reproduciendo correctamente');
+        }).catch(error => {
+          console.log('Autoplay bloqueado, esperando interacción:', error);
+          // Fallback para interacción del usuario
+          const playFallback = () => {
+            video.play().catch(e => console.log('Error en fallback:', e));
+            document.removeEventListener('click', playFallback);
+            document.removeEventListener('touchstart', playFallback);
+          };
+
+          document.addEventListener('click', playFallback, { once: true });
+          document.addEventListener('touchstart', playFallback, { once: true });
+        });
+      });
+
+      // Forzar carga inmediata
+      video.load();
+
+      video.addEventListener('loadedmetadata', () => {
+        this.duration = video.duration;
+        console.log('Metadata cargada, duración:', this.duration);
+      });
+
+      // Mostrar poster mientras carga
+      video.addEventListener('loadstart', () => {
+        console.log('Comenzando carga del video');
+      });
+
+      video.addEventListener('loadeddata', () => {
+        console.log('Datos del video cargados');
+      });
+    }
+
+    // Configurar video de presentación si existe
     if (this.videoRef) {
       const video = this.videoRef.nativeElement;
       video.addEventListener('loadedmetadata', () => {
         this.duration = video.duration;
       });
     }
-    
-    // Lazy load de videos de fondo
+
+    // Lazy load de videos de fondo (excepto el hero)
     this.lazyLoadVideos();
-    
+
     // Observar la sección de stats para animar cuando sea visible
     this.observeStatsSection();
   }
@@ -184,34 +232,40 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
         if (entry.isIntersecting) {
           const video = entry.target as HTMLVideoElement;
           const source = video.querySelector('source[data-src]') as HTMLSourceElement;
-          
+
           if (source && source.dataset['src']) {
             source.src = source.dataset['src'];
             video.load();
             video.muted = true;
-            
-            video.play().catch(error => {
-              console.log('Autoplay bloqueado:', error);
-              // Fallback: reproducir después de primer click
-              document.addEventListener('click', () => {
-                video.play().catch(e => console.log('Error:', e));
-              }, { once: true });
+
+            // Intentar reproducir inmediatamente
+            video.play().then(() => {
+              console.log('Video reproduciendo correctamente');
+            }).catch(error => {
+              console.log('Autoplay bloqueado, intentando fallback:', error);
+              // Fallback: intentar reproducir después de interacción del usuario
+              const playFallback = () => {
+                video.play().catch(e => console.log('Error en fallback:', e));
+                document.removeEventListener('click', playFallback);
+                document.removeEventListener('touchstart', playFallback);
+              };
+
+              document.addEventListener('click', playFallback, { once: true });
+              document.addEventListener('touchstart', playFallback, { once: true });
             });
-            
+
             videoObserver.unobserve(video);
           }
         }
       });
     }, {
-      rootMargin: '100px', // Cargar 100px antes de entrar en viewport
+      rootMargin: '50px', // Cargar 50px antes para mejor experiencia
       threshold: 0.1
     });
 
-    // Observar todos los videos background
-    setTimeout(() => {
-      const bgVideos = document.querySelectorAll('.bg-video') as NodeListOf<HTMLVideoElement>;
-      bgVideos.forEach(video => videoObserver.observe(video));
-    }, 100);
+    // Observar todos los videos background inmediatamente
+    const bgVideos = document.querySelectorAll('.bg-video') as NodeListOf<HTMLVideoElement>;
+    bgVideos.forEach(video => videoObserver.observe(video));
   }
 
   onVideoPlay() {

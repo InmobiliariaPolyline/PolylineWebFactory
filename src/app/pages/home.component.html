@@ -1,16 +1,17 @@
 <section class="hero">
   <!-- Video de fondo optimizado con lazy loading -->
   <div class="hero-bg-video">
-    <video 
-      autoplay 
-      muted 
-      loop 
-      playsinline 
-      preload="metadata"
-      class="bg-video" 
+    <video
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      class="bg-video"
       disablePictureInPicture
-      poster="assets/video-poster.jpg">
-      <source data-src="assets/videos/videoprueba4.mp4" type="video/mp4">
+      poster="assets/video-poster.jpg"
+      #videoElement>
+      <source src="assets/videos/videoprueba4.mp4" type="video/mp4">
       <!-- Fallback para navegadores que no soporten video -->
       Tu navegador no soporta videos HTML5.
     </video>
