@@ -1271,6 +1271,9 @@ $gray: #64748b;
     @media (max-width: 768px) {
       margin-bottom: 50px;
       padding-left: 60px;
+      // En móvil, mostrar todos los items directamente
+      opacity: 1;
+      transform: translateY(0);
     }
 
     &:last-child {
@@ -1439,6 +1442,8 @@ $gray: #64748b;
       @media (max-width: 768px) {
         padding: 20px;
         border-radius: 16px;
+        // En móvil, mostrar directamente las tarjetas
+        opacity: 1;
       }
 
       &::before {

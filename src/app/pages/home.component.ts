@@ -484,9 +484,11 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
   observeTimelineItems() {
     if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
+      // Ajustar threshold según el tamaño de pantalla
+      const isMobile = window.innerWidth <= 768;
       const options = {
-        threshold: 0.3,
-        rootMargin: '0px 0px -100px 0px'
+        threshold: isMobile ? 0.1 : 0.3,
+        rootMargin: isMobile ? '0px 0px -50px 0px' : '0px 0px -100px 0px'
       };
 
       const observer = new IntersectionObserver((entries) => {
