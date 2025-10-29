@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, HostListener } from '@angular/core';
+import { Component, signal, OnInit, HostListener, AfterViewInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationStart } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   readonly year = signal(new Date().getFullYear());
 
   // Estados UI
@@ -46,5 +46,30 @@ export class AppComponent implements OnInit {
     const t = ev.target as HTMLElement;
     if (t.closest('.nav') || t.closest('.hamburger')) return; // clic dentro => no cerrar
     this.closeAll();
+  }
+
+  // WhatsApp Widget Toggle
+  ngAfterViewInit() {
+    if (typeof document !== 'undefined') {
+      const toggle = document.getElementById('whatsapp-toggle');
+      const popup = document.getElementById('whatsapp-popup');
+
+      if (toggle && popup) {
+        toggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggle.classList.toggle('active');
+          popup.classList.toggle('active');
+        });
+
+        // Cerrar popup al hacer clic fuera
+        document.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          if (!target.closest('.whatsapp-widget')) {
+            toggle.classList.remove('active');
+            popup.classList.remove('active');
+          }
+        });
+      }
+    }
   }
 }

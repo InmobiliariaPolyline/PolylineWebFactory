@@ -11,11 +11,26 @@
 /* Fuente recomendada (igual que tu sitio) */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@400;600&display=swap');
 
+/* Reset completo */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 html, body {
   height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   font-family: 'Open Sans', Roboto, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
   color: var(--poly-text);
   background: var(--poly-bg);
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
 }
 
 /* Utilidades rápidas */
