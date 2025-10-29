@@ -170,27 +170,47 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
       });
     }
     
-    // Forzar reproducción de videos de fondo
-    this.playBackgroundVideos();
+    // Lazy load de videos de fondo
+    this.lazyLoadVideos();
     
     // Observar la sección de stats para animar cuando sea visible
     this.observeStatsSection();
   }
 
-  // Forzar reproducción de videos de fondo
-  playBackgroundVideos() {
+  // Lazy loading optimizado de videos
+  lazyLoadVideos() {
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const video = entry.target as HTMLVideoElement;
+          const source = video.querySelector('source[data-src]') as HTMLSourceElement;
+          
+          if (source && source.dataset['src']) {
+            source.src = source.dataset['src'];
+            video.load();
+            video.muted = true;
+            
+            video.play().catch(error => {
+              console.log('Autoplay bloqueado:', error);
+              // Fallback: reproducir después de primer click
+              document.addEventListener('click', () => {
+                video.play().catch(e => console.log('Error:', e));
+              }, { once: true });
+            });
+            
+            videoObserver.unobserve(video);
+          }
+        }
+      });
+    }, {
+      rootMargin: '100px', // Cargar 100px antes de entrar en viewport
+      threshold: 0.1
+    });
+
+    // Observar todos los videos background
     setTimeout(() => {
       const bgVideos = document.querySelectorAll('.bg-video') as NodeListOf<HTMLVideoElement>;
-      bgVideos.forEach(video => {
-        video.muted = true; // Asegurar que esté muted
-        video.play().catch(error => {
-          console.log('Autoplay bloqueado para video:', error);
-          // Intentar reproducir después de interacción del usuario
-          document.addEventListener('click', () => {
-            video.play().catch(e => console.log('Error al reproducir:', e));
-          }, { once: true });
-        });
-      });
+      bgVideos.forEach(video => videoObserver.observe(video));
     }, 100);
   }
 
