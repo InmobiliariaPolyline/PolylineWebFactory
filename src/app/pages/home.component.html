@@ -1,8 +1,10 @@
 <section class="hero">
   <!-- Video de fondo optimizado -->
   <div class="hero-bg-video">
-    <video autoplay muted loop playsinline class="bg-video">
+    <video autoplay muted loop playsinline preload="auto" class="bg-video" disablePictureInPicture>
       <source src="assets/videos/videoprueba4.mp4" type="video/mp4">
+      <!-- Fallback para navegadores que no soporten video -->
+      Tu navegador no soporta videos HTML5.
     </video>
     <div class="video-overlay"></div>
   </div>
@@ -289,8 +291,9 @@
 <section class="benefits">
    <!-- Video de fondo de toda la sección -->
    <div class="benefits-bg-video">
-     <video autoplay muted loop playsinline class="bg-video">
+     <video autoplay muted loop playsinline preload="auto" class="bg-video" disablePictureInPicture>
        <source src="assets/videos/3129576-uhd_3840_2160_30fps.mp4" type="video/mp4">
+       Tu navegador no soporta videos HTML5.
      </video>
      <div class="video-overlay"></div>
    </div>

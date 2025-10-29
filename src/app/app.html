@@ -1,5 +1,7 @@
 <!-- Backdrop debajo del header/nav (z-index menor que .topbar) -->
-<div class="backdrop" *ngIf="menuOpen" (click)="closeAll()"></div>
+@if (menuOpen) {
+  <div class="backdrop" (click)="closeAll()"></div>
+}
 
 <header class="topbar">
   <div class="wrap">

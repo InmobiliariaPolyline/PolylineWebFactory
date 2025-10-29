@@ -170,8 +170,28 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
       });
     }
     
+    // Forzar reproducción de videos de fondo
+    this.playBackgroundVideos();
+    
     // Observar la sección de stats para animar cuando sea visible
     this.observeStatsSection();
+  }
+
+  // Forzar reproducción de videos de fondo
+  playBackgroundVideos() {
+    setTimeout(() => {
+      const bgVideos = document.querySelectorAll('.bg-video') as NodeListOf<HTMLVideoElement>;
+      bgVideos.forEach(video => {
+        video.muted = true; // Asegurar que esté muted
+        video.play().catch(error => {
+          console.log('Autoplay bloqueado para video:', error);
+          // Intentar reproducir después de interacción del usuario
+          document.addEventListener('click', () => {
+            video.play().catch(e => console.log('Error al reproducir:', e));
+          }, { once: true });
+        });
+      });
+    }, 100);
   }
 
   onVideoPlay() {
