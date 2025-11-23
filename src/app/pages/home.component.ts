@@ -17,7 +17,6 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('previewHost', { read: ViewContainerRef }) previewHost!: ViewContainerRef;
   
   // Video state
-  
   isPlaying = false;
   isMuted = false;
   currentTime = 0;
