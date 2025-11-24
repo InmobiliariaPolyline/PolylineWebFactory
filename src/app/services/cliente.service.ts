@@ -1,33 +1,58 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
+import { map } from 'rxjs/operators';
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+} from 'firebase/firestore';
+import { db } from '../firebase.config';
 import { Cliente } from '../models/cliente.model';
 
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
-  private baseUrl = 'https://backkowdevelopment.onrender.com/api/clientes';
+  private collectionName = 'clientes';
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
   getAll(): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(this.baseUrl);
+    const q = collection(db, this.collectionName);
+    return from(getDocs(q)).pipe(
+      map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Cliente)))
+    );
   }
 
   getById(id: string): Observable<Cliente> {
-    return this.http.get<Cliente>(`${this.baseUrl}/${id}`);
+    const docRef = doc(db, this.collectionName, id);
+    return from(getDoc(docRef)).pipe(
+      map(snapshot => ({ id: snapshot.id, ...snapshot.data() } as Cliente))
+    );
   }
 
-  // si tu back devuelve { id: string } al crear:
-  create(cliente: Omit<Cliente, 'id' | 'createdAt'>): Observable<{ id: string }> {
-    return this.http.post<{ id: string }>(this.baseUrl, cliente);
+  create(cliente: Omit<Cliente, 'id'>): Observable<{ id: string }> {
+    const clienteConTimestamp = {
+      ...cliente,
+      createdAt: serverTimestamp()
+    };
+    const colRef = collection(db, this.collectionName);
+    return from(addDoc(colRef, clienteConTimestamp)).pipe(
+      map(docRef => ({ id: docRef.id }))
+    );
   }
 
   update(id: string, cliente: Partial<Cliente>): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${id}`, cliente);
+    const docRef = doc(db, this.collectionName, id);
+    return from(updateDoc(docRef, cliente));
   }
 
   delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+    const docRef = doc(db, this.collectionName, id);
+    return from(deleteDoc(docRef));
   }
 
 

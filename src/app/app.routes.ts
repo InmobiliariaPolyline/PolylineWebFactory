@@ -15,6 +15,8 @@ import { NewsBitcoin } from './pages/news-bitcoin/news-bitcoin';
 import { NewsNegocios } from './pages/news-negocios/news-negocios';
 import { AdminCategoriesComponent } from './admin-categories/admin-categories';
 import { AdminUsersComponent } from './admin-users/admin-users';
+import { AdminClientesComponent } from './admin-clientes/admin-clientes';
+import { PaymentGatewayComponent } from './pages/payment-gateway/payment-gateway';
 import { AdminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
@@ -33,6 +35,8 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent, title: 'Crear Cuenta | POLYLINE' },
   { path: 'admin/categorias', component: AdminCategoriesComponent, canActivate: [AdminGuard], title: 'Administrar Categorías' },
   { path: 'admin/usuarios', component: AdminUsersComponent, canActivate: [AdminGuard], title: 'Administrar Usuarios' },
+  { path: 'admin/clientes', component: AdminClientesComponent, canActivate: [AdminGuard], title: 'Administrar Clientes' },
+  { path: 'pago/:pedidoId', component: PaymentGatewayComponent, title: 'Pasarela de Pago' },
   { 
     path: 'plantilla/:slug', 
     loadComponent: () => import('./demo/demo.component').then(m => m.DemoComponent),

@@ -30,7 +30,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   isLoggedIn(): boolean {
     if (typeof window !== 'undefined' && window.localStorage) {
       const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-      console.log('isLoggedIn check:', user !== null, 'user:', user);
       return user !== null;
     }
     return false;
@@ -120,6 +119,26 @@ export class AppComponent implements OnInit, AfterViewInit {
           }
         });
       }
+    }
+
+    // Método de debug para consola
+    if (typeof window !== 'undefined') {
+      (window as any).debugUsers = () => {
+        console.log('=== DEBUG: Listando todos los usuarios ===');
+        // Importar dinámicamente para evitar dependencias circulares
+        import('./services/usuario.service').then(({ UsuarioService }) => {
+          const usuarioService = new UsuarioService();
+          usuarioService.getAllUsersForDebug().subscribe({
+            next: (users) => {
+              console.log('Usuarios encontrados:', users);
+            },
+            error: (error) => {
+              console.error('Error obteniendo usuarios:', error);
+            }
+          });
+        });
+      };
+      console.log('Debug disponible: ejecuta debugUsers() en la consola para ver todos los usuarios');
     }
   }
 }

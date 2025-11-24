@@ -64,67 +64,72 @@ export class AdminUsersComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.usuarioForm.valid) {
-      const usuarioData = {
-        ...this.usuarioForm.value,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
+    if (this.usuarioForm.invalid) {
+      this.usuarioForm.markAllAsTouched();
+      return;
+    }
 
-      if (this.editingUsuario) {
-         // Para actualización, incluir contraseña solo si se cambió
-         if (!usuarioData.contraseña) {
-           delete usuarioData.contraseña;
-         }
-         this.usuarioService.updateUsuario(this.editingUsuario.id!, usuarioData).subscribe({
-           next: () => {
-             alert('Usuario actualizado exitosamente');
-             this.loadUsuarios();
-             this.toggleForm();
-           },
-           error: (error: any) => {
-             console.error('Error actualizando usuario:', error);
-             alert('Error actualizando usuario: ' + error.message);
-           }
-         });
-       } else {
-         // Para creación, requerir contraseña
-         if (!usuarioData.contraseña) {
-           alert('La contraseña es requerida para crear un nuevo usuario');
-           return;
-         }
-         this.usuarioService.createUsuario(usuarioData).subscribe({
-           next: () => {
-             alert('Usuario creado exitosamente');
-             this.loadUsuarios();
-             this.toggleForm();
-           },
-           error: (error: any) => {
-             console.error('Error creando usuario:', error);
-             alert('Error creando usuario: ' + error.message);
-           }
-         });
-       }
+    const usuarioData = this.usuarioForm.value;
+    console.log('AdminUsers: Procesando formulario:', usuarioData);
+
+    if (this.editingUsuario) {
+      console.log('AdminUsers: Actualizando usuario existente:', this.editingUsuario.id);
+      // Para actualización, incluir contraseña solo si se cambió
+      if (!usuarioData.contraseña) {
+        delete usuarioData.contraseña;
+      }
+      this.usuarioService.updateUsuario(this.editingUsuario.id!, usuarioData).subscribe({
+        next: () => {
+          console.log('AdminUsers: Usuario actualizado exitosamente');
+          alert('Usuario actualizado exitosamente');
+          this.loadUsuarios();
+          this.toggleForm();
+        },
+        error: (error: any) => {
+          console.error('AdminUsers: Error actualizando usuario:', error);
+          console.error('Detalles del error:', JSON.stringify(error, null, 2));
+          alert('Error actualizando usuario: ' + (error?.message || 'Error desconocido'));
+        }
+      });
+    } else {
+      console.log('AdminUsers: Creando nuevo usuario');
+      // Para creación, requerir contraseña
+      if (!usuarioData.contraseña) {
+        alert('La contraseña es requerida para crear un nuevo usuario');
+        return;
+      }
+      this.usuarioService.createUsuario(usuarioData).subscribe({
+        next: (usuarioCreado) => {
+          console.log('AdminUsers: Usuario creado exitosamente:', usuarioCreado);
+          alert('Usuario creado exitosamente');
+          this.loadUsuarios();
+          this.toggleForm();
+        },
+        error: (error: any) => {
+          console.error('AdminUsers: Error creando usuario:', error);
+          console.error('Detalles del error:', JSON.stringify(error, null, 2));
+          alert('Error creando usuario: ' + (error?.message || 'Error desconocido'));
+        }
+      });
     }
   }
 
   toggleUserStatus(usuario: Usuario) {
-     const updates = {
-       active: !usuario.active,
-       updatedAt: new Date()
-     };
+      const updates = {
+        active: !usuario.active
+      };
 
-     this.usuarioService.patchUsuario(usuario.id!, updates).subscribe({
-       next: () => {
-         alert(`Usuario ${updates.active ? 'activado' : 'desactivado'} exitosamente`);
-         this.loadUsuarios();
-       },
-       error: (error: any) => {
-         console.error('Error actualizando estado del usuario:', error);
-         alert('Error actualizando estado del usuario: ' + error.message);
-       }
-     });
-   }
+      this.usuarioService.patchUsuario(usuario.id!, updates).subscribe({
+        next: () => {
+          alert(`Usuario ${updates.active ? 'activado' : 'desactivado'} exitosamente`);
+          this.loadUsuarios();
+        },
+        error: (error: any) => {
+          console.error('Error actualizando estado del usuario:', error);
+          alert('Error actualizando estado del usuario: ' + error.message);
+        }
+      });
+    }
 
   deleteUsuario(id: string) {
      if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
@@ -140,4 +145,11 @@ export class AdminUsersComponent implements OnInit {
        });
      }
    }
+
+  formatDate(date: any): Date {
+    if (date && typeof date.toDate === 'function') {
+      return date.toDate(); // Es un Timestamp de Firebase
+    }
+    return date; // Es un Date normal
+  }
 }

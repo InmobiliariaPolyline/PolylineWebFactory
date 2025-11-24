@@ -5,14 +5,16 @@ export interface Direccion {
   linea: string;
 }
 
+import { Timestamp } from 'firebase/firestore';
+
 export interface Cliente {
    id?: string;
-  apellidos: string;
-  nombres: string;
-  empresa: string;
-  documentoIdentidad: string;
-  email: string;
-  telefono: string;
-   createdAt?: Date | string;
-  direccion: Direccion;
+   apellidos: string;
+   nombres: string;
+   empresa: string;
+   documentoIdentidad: string;
+   email: string;
+   telefono: string;
+   createdAt?: Date | string | Timestamp;
+   direccion: Direccion;
 }

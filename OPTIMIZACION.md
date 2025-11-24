@@ -1,4 +1,4 @@
-# 🚀 GUÍA DE OPTIMIZACIÓN - KowDevelopment Website
+# 🚀 GUÍA DE OPTIMIZACIÓN - AIFactory Website
 
 ## ✅ OPTIMIZACIONES YA IMPLEMENTADAS
 
@@ -239,4 +239,4 @@ Si necesitas ayuda con alguna optimización, consulta:
 
 **Última actualización:** 28 de octubre de 2025
 **Autor:** GitHub Copilot
-**Proyecto:** PolylineWebFactory / KowDevelopment
+**Proyecto:** PolylineWebFactory / AIFactory

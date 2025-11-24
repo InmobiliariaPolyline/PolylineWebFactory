@@ -80,7 +80,7 @@
           <td>{{ usuario.email }}</td>
           <td>{{ usuario.rol }}</td>
           <td>{{ usuario.active ? 'Activo' : 'Inactivo' }}</td>
-          <td>{{ usuario.createdAt | date:'short' }}</td>
+          <td>{{ formatDate(usuario.createdAt) | date:'short' }}</td>
           <td>
             <button class="btn btn-edit" (click)="toggleForm(usuario)">Editar</button>
             <button class="btn btn-status" (click)="toggleUserStatus(usuario)">

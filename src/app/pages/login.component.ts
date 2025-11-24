@@ -33,44 +33,55 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const { email, contraseña } = this.loginForm.value;
-
-      // Primero verificar si el usuario existe
-      this.usuarioService.verificarEmail(email).subscribe({
-        next: (existe) => {
-          if (existe) {
-            // Usuario existe, proceder con login
-            this.usuarioService.loginUsuario(email, contraseña).subscribe({
-              next: (usuario) => {
-                if (usuario) {
-                  // Guardar usuario en localStorage
-                  localStorage.setItem('currentUser', JSON.stringify(usuario));
-                  alert('Login exitoso');
-                  console.log('Login exitoso:', usuario);
-                  this.router.navigate(['/']);
-                } else {
-                  alert('Credenciales inválidas');
-                  console.error('Credenciales inválidas');
-                }
-              },
-              error: (error) => {
-                console.error('Error en login:', error);
-                alert('Error en login. Verifique sus credenciales.');
-              }
-            });
-          } else {
-            // Usuario no existe, mostrar botón de registro
-            this.showRegisterButton = true;
-            alert('Usuario no encontrado. ¿Desea registrarse?');
-            console.log('Usuario no encontrado:', email);
-          }
-        },
-        error: (error) => {
-          console.error('Error al verificar email:', error);
-          alert('Error al verificar usuario. Intente nuevamente.');
-        }
-      });
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
     }
+
+    const { email, contraseña } = this.loginForm.value;
+    console.log('Intentando login con:', { email, contraseña: '***' });
+
+    // Primero verificar si el usuario existe
+    this.usuarioService.verificarEmail(email).subscribe({
+      next: (existe) => {
+        console.log('Verificación de email:', existe);
+        if (existe) {
+          // Usuario existe, proceder con login
+          this.usuarioService.loginUsuario(email, contraseña).subscribe({
+            next: (usuario) => {
+              console.log('Respuesta de login:', usuario);
+              if (usuario) {
+                // Guardar usuario en localStorage
+                localStorage.setItem('currentUser', JSON.stringify(usuario));
+                console.log('Usuario guardado en localStorage:', usuario);
+                console.log('Rol del usuario:', usuario.rol);
+                console.log('Usuario activo:', usuario.active);
+                alert('Login exitoso');
+                console.log('Login exitoso:', usuario);
+                this.router.navigate(['/']);
+              } else {
+                alert('Credenciales inválidas');
+                console.error('Credenciales inválidas - usuario null');
+              }
+            },
+            error: (error) => {
+              console.error('Error en login:', error);
+              console.error('Detalles del error:', JSON.stringify(error, null, 2));
+              alert('Error en login: ' + (error?.message || 'Error desconocido') + '. Verifique sus credenciales.');
+            }
+          });
+        } else {
+          // Usuario no existe, mostrar botón de registro
+          this.showRegisterButton = true;
+          alert('Usuario no encontrado. ¿Desea registrarse?');
+          console.log('Usuario no encontrado:', email);
+        }
+      },
+      error: (error) => {
+        console.error('Error al verificar email:', error);
+        console.error('Detalles del error:', JSON.stringify(error, null, 2));
+        alert('Error al verificar usuario: ' + (error?.message || 'Error desconocido') + '. Intente nuevamente.');
+      }
+    });
   }
 }

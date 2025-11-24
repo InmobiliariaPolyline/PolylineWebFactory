@@ -45,6 +45,16 @@ export class SaleComponent implements OnInit {
     });
   }
 
+  irAPasarelaPago() {
+    if (!this.pedido) {
+      alert('Error: No se encontró el pedido');
+      return;
+    }
+
+    console.log('Redirigiendo a pasarela de pago para pedido:', this.pedido.id);
+    this.router.navigate(['/pago', this.pedido.id]);
+  }
+
   procesarPago() {
     if (!this.pedido) return;
 

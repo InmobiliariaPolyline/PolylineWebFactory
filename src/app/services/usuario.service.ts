@@ -1,69 +1,168 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  serverTimestamp
+} from 'firebase/firestore';
+import { db } from '../firebase.config';
 import { Usuario } from '../models/usuario.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = 'https://backkowdevelopment.onrender.com/api/usuarios'; // URL de tu backend Spring Boot
+  private collectionName = 'usuarios';
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
   /* ====================== AUTENTICACIÓN ====================== */
 
   // Login (usando "contraseña" o "password")
   loginUsuario(email: string, contraseña: string): Observable<Usuario> {
-    return this.http.post<Usuario>(`${this.apiUrl}/login`, { email, contraseña });
+    console.log('Login: Buscando usuario por email:', email);
+    const q = query(collection(db, this.collectionName), where('email', '==', email));
+    return from(getDocs(q)).pipe(
+      map(snapshot => {
+        console.log('Login: Documentos encontrados:', snapshot.size);
+        if (snapshot.empty) {
+          console.log('Login: No se encontró usuario con ese email');
+          throw new Error('Credenciales inválidas');
+        }
+        const doc = snapshot.docs[0];
+        const userData = doc.data() as Usuario;
+        console.log('Login: Datos del usuario encontrado:', userData);
+        console.log('Login: Contraseña almacenada:', userData.contraseña);
+        console.log('Login: Contraseña proporcionada:', contraseña);
+
+        // Verificar contraseña
+        if (userData.contraseña !== contraseña) {
+          console.log('Login: Contraseña no coincide');
+          throw new Error('Credenciales inválidas');
+        }
+
+        console.log('Login: Login exitoso');
+        return { id: doc.id, ...userData };
+      })
+    );
   }
 
   /* ====================== CRUD USUARIOS ====================== */
 
   // Registrar usuario con valores por defecto
-  registrarUsuario(usuario: Usuario): Observable<Usuario> {
+  registrarUsuario(usuario: Omit<Usuario, 'id'>): Observable<Usuario> {
+    console.log('Iniciando registro de usuario:', usuario);
     const usuarioConDefaults = {
       ...usuario,
       active: true,
-      rol: 'cliente'
+      rol: 'cliente',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
     };
-    return this.http.post<Usuario>(this.apiUrl, usuarioConDefaults);
+    console.log('Usuario con defaults:', usuarioConDefaults);
+    const colRef = collection(db, this.collectionName);
+    console.log('Referencia a colección obtenida');
+    return from(addDoc(colRef, usuarioConDefaults)).pipe(
+      map(docRef => {
+        console.log('Documento agregado con ID:', docRef.id);
+        const usuarioRegistrado = { ...usuarioConDefaults, id: docRef.id } as Usuario;
+        console.log('Usuario registrado:', usuarioRegistrado);
+        return usuarioRegistrado;
+      })
+    );
   }
 
   // Listar todos
   getUsuarios(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(this.apiUrl);
+    const q = collection(db, this.collectionName);
+    return from(getDocs(q)).pipe(
+      map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Usuario)))
+    );
   }
 
   // Obtener usuario por ID
   getUsuarioById(id: string): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.apiUrl}/${id}`);
+    const docRef = doc(db, this.collectionName, id);
+    return from(getDoc(docRef)).pipe(
+      map(snapshot => ({ id: snapshot.id, ...snapshot.data() } as Usuario))
+    );
   }
 
   // Crear usuario
-  createUsuario(usuario: Usuario): Observable<Usuario> {
-    return this.http.post<Usuario>(this.apiUrl, usuario);
+  createUsuario(usuario: Omit<Usuario, 'id'>): Observable<Usuario> {
+    console.log('Creando usuario desde admin:', usuario);
+    const usuarioConTimestamps = {
+      ...usuario,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    };
+    console.log('Usuario con timestamps:', usuarioConTimestamps);
+    const colRef = collection(db, this.collectionName);
+    return from(addDoc(colRef, usuarioConTimestamps)).pipe(
+      map(docRef => {
+        console.log('Usuario creado con ID:', docRef.id);
+        return { ...usuarioConTimestamps, id: docRef.id } as Usuario;
+      })
+    );
   }
 
   // Actualizar usuario (PUT)
-  updateUsuario(id: string, usuario: Usuario): Observable<Usuario> {
-    return this.http.put<Usuario>(`${this.apiUrl}/${id}`, usuario);
+  updateUsuario(id: string, usuario: Partial<Usuario>): Observable<void> {
+    const docRef = doc(db, this.collectionName, id);
+    return from(updateDoc(docRef, usuario));
   }
 
   // Actualizar parcialmente (PATCH)
-  patchUsuario(id: string, partialData: any): Observable<Usuario> {
-    return this.http.patch<Usuario>(`${this.apiUrl}/${id}`, partialData);
+  patchUsuario(id: string, partialData: Partial<Usuario>): Observable<void> {
+    const dataConTimestamp = {
+      ...partialData,
+      updatedAt: serverTimestamp()
+    };
+    const docRef = doc(db, this.collectionName, id);
+    return from(updateDoc(docRef, dataConTimestamp));
   }
 
   // Eliminar usuario
   deleteUsuario(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    const docRef = doc(db, this.collectionName, id);
+    return from(deleteDoc(docRef));
   }
 
   /* ====================== UTILIDADES ====================== */
 
   // Verificar si un email ya está registrado
   verificarEmail(email: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.apiUrl}/verificar-email?email=${email}`);
+    console.log('Verificando email:', email);
+    const q = query(collection(db, this.collectionName), where('email', '==', email));
+    console.log('Query creada para verificar email');
+    return from(getDocs(q)).pipe(
+      map(snapshot => {
+        const exists = !snapshot.empty;
+        console.log('Resultado de verificación de email:', exists, 'Documentos encontrados:', snapshot.size);
+        return exists;
+      })
+    );
+  }
+
+  // Método para debug: obtener todos los usuarios
+  getAllUsersForDebug(): Observable<Usuario[]> {
+    console.log('Debug: Obteniendo todos los usuarios');
+    const q = collection(db, this.collectionName);
+    return from(getDocs(q)).pipe(
+      map(snapshot => {
+        console.log('Debug: Total de usuarios en Firestore:', snapshot.size);
+        const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Usuario));
+        console.log('Debug: Usuarios encontrados:', users);
+        return users;
+      })
+    );
   }
 }

@@ -6,7 +6,7 @@
 
 #### **Sección Superior (4 columnas)**
 1. **Marca y Redes Sociales**
-   - Logo de KowDevelopment
+   - Logo de AIFactory
    - Descripción breve
    - Íconos sociales: Facebook, Twitter, Instagram, LinkedIn
    - Efectos hover con gradientes
@@ -22,13 +22,13 @@
    - Documentación
 
 4. **Contacto**
-   - Email: info@kowdevelopment.com
+   - Email: info@aifactory.com
    - Teléfono: +52 1 55 4433 2211
    - Ubicación: Ciudad de México, México
    - Iconos visuales para cada dato
 
 #### **Sección Inferior**
-- Copyright © 2025 KowDevelopment
+- Copyright © 2025 AIFactory
 - Enlaces legales: Términos, Privacidad, Cookies
 
 ### 📱 Botón Flotante de WhatsApp
@@ -46,7 +46,7 @@
 #### **Configuración del Mensaje:**
 ```
 Número: +52 1 55 4433 2211
-Mensaje: "Hola, me interesa crear un sitio web con KowDevelopment"
+Mensaje: "Hola, me interesa crear un sitio web con AIFactory"
 ```
 
 ### 🎨 Diseño Responsivo

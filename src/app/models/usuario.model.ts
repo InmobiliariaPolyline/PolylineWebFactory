@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface Usuario {
   id?: string;
   nombres: string;
@@ -6,12 +8,6 @@ export interface Usuario {
   contraseña?: string;
   active?: boolean;
   rol?: string;
-   createdAt?: Date;
-  updatedAt?: Date;
-
-
-
+  createdAt?: Timestamp | Date;
+  updatedAt?: Timestamp | Date;
 }
-
-
-

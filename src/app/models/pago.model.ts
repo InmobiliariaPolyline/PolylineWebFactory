@@ -8,4 +8,5 @@ export interface Pago {
   pedidoId: string;
   proveedorId: string;
   updatedAt: Date;
+  datosPago?: any; // Datos adicionales del formulario de pago
 }
