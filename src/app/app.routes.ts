@@ -4,8 +4,6 @@ import { HomeComponent } from './pages/home.component';
 import { TemplatesComponent } from './pages/templates.component';
 import { PricingComponent } from './pages/pricing.component';
 import { QuoteComponent } from './pages/quote.component';
-import { OrderComponent } from './pages/order/order';
-import { SaleComponent } from './pages/sale/sale';
 import { ContactComponent } from './pages/contact.component';
 import { LoginComponent } from './pages/login.component';
 import { RegisterComponent } from './pages/register.component';
@@ -13,19 +11,12 @@ import { NewsComponent } from './pages/news.component';
 import { NewsAiTecnologia } from './pages/news-ai-tecnologia/news-ai-tecnologia';
 import { NewsBitcoin } from './pages/news-bitcoin/news-bitcoin';
 import { NewsNegocios } from './pages/news-negocios/news-negocios';
-import { AdminCategoriesComponent } from './admin-categories/admin-categories';
-import { AdminUsersComponent } from './admin-users/admin-users';
-import { AdminClientesComponent } from './admin-clientes/admin-clientes';
-import { PaymentGatewayComponent } from './pages/payment-gateway/payment-gateway';
-import { AdminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, title: 'Crea tu web | POLYLINE' },
   { path: 'plantillas', component: TemplatesComponent, title: 'Plantillas' },
   { path: 'precios', component: PricingComponent, title: 'Precios' },
   { path: 'cotizar', component: QuoteComponent, title: 'Cotizar' },
-  { path: 'pedido', component: OrderComponent, title: 'Pedido' },
-  { path: 'venta', component: SaleComponent, title: 'Venta' },
   { path: 'contacto', component: ContactComponent, title: 'Contacto' },
   { path: 'noticias', component: NewsComponent, title: 'Noticias | POLYLINE' },
   { path: 'noticias/ia-tecnologia', component: NewsAiTecnologia, title: 'IA y Tecnología | POLYLINE' },
@@ -33,10 +24,6 @@ export const routes: Routes = [
   { path: 'noticias/negocios', component: NewsNegocios, title: 'Negocios y Economía | POLYLINE' },
   { path: 'login', component: LoginComponent, title: 'Iniciar Sesión | POLYLINE' },
   { path: 'register', component: RegisterComponent, title: 'Crear Cuenta | POLYLINE' },
-  { path: 'admin/categorias', component: AdminCategoriesComponent, canActivate: [AdminGuard], title: 'Administrar Categorías' },
-  { path: 'admin/usuarios', component: AdminUsersComponent, canActivate: [AdminGuard], title: 'Administrar Usuarios' },
-  { path: 'admin/clientes', component: AdminClientesComponent, canActivate: [AdminGuard], title: 'Administrar Clientes' },
-  { path: 'pago/:pedidoId', component: PaymentGatewayComponent, title: 'Pasarela de Pago' },
   { 
     path: 'plantilla/:slug', 
     loadComponent: () => import('./demo/demo.component').then(m => m.DemoComponent),
