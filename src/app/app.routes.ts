@@ -16,8 +16,11 @@ import { NewsNegocios } from './pages/news-negocios/news-negocios';
 import { AdminCategoriesComponent } from './admin-categories/admin-categories';
 import { AdminUsersComponent } from './admin-users/admin-users';
 import { AdminClientesComponent } from './admin-clientes/admin-clientes';
+import { AdminDashboard } from './admin-dashboard/admin-dashboard';
+import { AdminPagos } from './admin-pagos/admin-pagos';
 import { PaymentGatewayComponent } from './pages/payment-gateway/payment-gateway';
 import { AdminGuard } from './guards/admin.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, title: 'Crea tu web | POLYLINE' },
@@ -33,6 +36,8 @@ export const routes: Routes = [
   { path: 'noticias/negocios', component: NewsNegocios, title: 'Negocios y Economía | POLYLINE' },
   { path: 'login', component: LoginComponent, title: 'Iniciar Sesión | POLYLINE' },
   { path: 'register', component: RegisterComponent, title: 'Crear Cuenta | POLYLINE' },
+  { path: 'admin/dashboard', component: AdminDashboard, canActivate: [AdminGuard], title: 'Dashboard Administrador' },
+  { path: 'admin/pagos', component: AdminPagos, canActivate: [AdminGuard], title: 'Gestión de Pagos' },
   { path: 'admin/categorias', component: AdminCategoriesComponent, canActivate: [AdminGuard], title: 'Administrar Categorías' },
   { path: 'admin/usuarios', component: AdminUsersComponent, canActivate: [AdminGuard], title: 'Administrar Usuarios' },
   { path: 'admin/clientes', component: AdminClientesComponent, canActivate: [AdminGuard], title: 'Administrar Clientes' },

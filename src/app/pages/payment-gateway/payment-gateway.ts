@@ -187,7 +187,8 @@ export class PaymentGatewayComponent implements OnInit {
           { key: 'bancoOrigen', label: 'Banco Origen', type: 'text', placeholder: 'Ej: BCP, Interbank, BBVA' },
           { key: 'numeroCuenta', label: 'Número de Cuenta', type: 'text', placeholder: 'Cuenta de origen' },
           { key: 'titularCuenta', label: 'Titular de la Cuenta', type: 'text', placeholder: 'Nombre del titular' },
-          { key: 'codigoOperacion', label: 'Código de Operación', type: 'text', placeholder: 'Código de la transferencia (opcional)' }
+          { key: 'codigoOperacion', label: 'Código de Operación', type: 'text', placeholder: 'Código de la transferencia' },
+          { key: 'comprobante', label: 'Comprobante de Pago', type: 'file', placeholder: 'Sube la imagen del comprobante' }
         ];
         break;
       case 'yape':
@@ -285,13 +286,14 @@ export class PaymentGatewayComponent implements OnInit {
 
     // Crear el pago con datos adicionales
     const pagoData = {
-      estado: 'completado', // Cambiar a completado ya que se procesa inmediatamente
+      estado: 'pendiente', // El pago queda pendiente hasta verificación
       metodo: this.metodoSeleccionado,
       moneda: this.pedido.moneda,
       monto: this.pedido.totales.total,
       pedidoId: this.pedido.id,
       proveedorId: 'default_provider',
-      datosPago: this.paymentForm // Incluir todos los datos del formulario
+      datosPago: this.paymentForm, // Incluir todos los datos del formulario
+      estadoVerificacion: 'pendiente' as 'pendiente' // Requiere verificación manual
     };
 
     console.log('Datos del pago a enviar:', pagoData);
@@ -299,7 +301,7 @@ export class PaymentGatewayComponent implements OnInit {
     this.pagoService.create(pagoData).subscribe({
       next: (pagoCreado) => {
         console.log('Pago creado exitosamente:', pagoCreado);
-        alert(`Pago procesado exitosamente con ${this.getNombreMetodo(this.metodoSeleccionado)}`);
+        alert(`Pago registrado exitosamente con ${this.getNombreMetodo(this.metodoSeleccionado)}. Su pago está pendiente de verificación por nuestro equipo. Le notificaremos cuando sea aprobado.`);
         this.router.navigate(['/venta', this.pedido!.id]);
       },
       error: (error) => {
@@ -332,6 +334,24 @@ export class PaymentGatewayComponent implements OnInit {
     // Implementación básica sin manipulación directa del DOM
     const value = event?.target?.value || '';
     this.paymentForm.fechaExpiracion = value.replace(/\D/g, '');
+  }
+
+  onFileSelected(event: any, fieldKey: string): void {
+    const file = event.target.files[0];
+    if (file) {
+      // Aquí podrías subir el archivo a un servicio de storage
+      // Por ahora, guardamos el nombre del archivo
+      this.paymentForm[fieldKey] = file.name;
+      console.log('Archivo seleccionado:', file.name);
+    }
+  }
+
+  getFileAccept(fieldKey: string): string {
+    // Aceptar imágenes para comprobantes
+    if (fieldKey === 'comprobante') {
+      return 'image/*';
+    }
+    return '*';
   }
 
   isValidField(fieldKey: string): boolean {

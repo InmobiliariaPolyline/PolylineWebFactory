@@ -60,21 +60,86 @@
       </button>
     </div>
 
-    <div class="payment-form" *ngIf="metodoSeleccionado && camposPago.length > 0">
+    <div class="payment-form" *ngIf="metodoSeleccionado">
       <div class="form-card">
         <h3>Información de Pago - {{ getNombreMetodo(metodoSeleccionado) }}</h3>
 
-        <div class="payment-fields">
+        <!-- Información específica para Transferencia Bancaria -->
+        <div class="payment-info-section" *ngIf="metodoSeleccionado === 'transferencia_bancaria'">
+          <div class="bank-info">
+            <h4>💰 Datos para Transferencia Bancaria</h4>
+            <div class="bank-details">
+              <div class="detail-row">
+                <span class="label">Banco:</span>
+                <span class="value">BCP</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Cuenta:</span>
+                <span class="value">193-2548545-0-24</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Titular:</span>
+                <span class="value">POLYLINE S.A.C</span>
+              </div>
+            </div>
+            <div class="transfer-notice">
+              <p>📋 <strong>Instrucciones:</strong></p>
+              <ul>
+                <li>Realiza la transferencia desde tu banco usando estos datos</li>
+                <li>Incluye el código de operación en el formulario</li>
+                <li>El pago se confirmará automáticamente una vez recibido</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Información específica para Yape -->
+        <div class="payment-info-section" *ngIf="metodoSeleccionado === 'yape'">
+          <div class="yape-info">
+            <h4>📱 Pago con Yape</h4>
+            <div class="yape-details">
+              <div class="qr-section">
+                <img src="assets/imagenes/QR.png" alt="QR de Yape" class="yape-qr">
+                <p class="qr-label">Escanea este QR con tu app Yape</p>
+              </div>
+              <div class="yape-contact">
+                <div class="detail-row">
+                  <span class="label">Número:</span>
+                  <span class="value">+51 943 812 536</span>
+                </div>
+                <div class="yape-notice">
+                  <p>📋 <strong>Instrucciones:</strong></p>
+                  <ul>
+                    <li>Escanea el QR con tu app Yape</li>
+                    <li>Confirma el monto y realiza el pago</li>
+                    <li>Ingresa el código de verificación recibido</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario de campos -->
+        <div class="payment-fields" *ngIf="camposPago.length > 0">
           <div class="field-row" *ngFor="let campo of camposPago; let i = index">
             <div class="field-group">
               <label [for]="campo.key">{{ campo.label }}</label>
               <input
-                *ngIf="campo.type !== 'textarea'"
+                *ngIf="campo.type !== 'textarea' && campo.type !== 'file'"
                 [type]="campo.type"
                 [id]="campo.key"
                 [placeholder]="campo.placeholder"
                 [(ngModel)]="paymentForm[campo.key]"
                 [class.error]="campo.pattern && paymentForm[campo.key] && !isValidField(campo.key)">
+
+              <input
+                *ngIf="campo.type === 'file'"
+                type="file"
+                [id]="campo.key"
+                [accept]="getFileAccept(campo.key)"
+                (change)="onFileSelected($event, campo.key)"
+                class="file-input">
               <textarea
                 *ngIf="campo.type === 'textarea'"
                 [id]="campo.key"
@@ -93,10 +158,36 @@
 
     <div class="payment-info" *ngIf="metodoSeleccionado">
       <div class="info-card">
-        <h4>Método Seleccionado: {{ getNombreMetodo(metodoSeleccionado) }}</h4>
-        <p>Al confirmar, procederás con el pago usando este método.</p>
-        <p class="warning">* Asegúrate de tener fondos suficientes para completar la transacción.</p>
-        <p class="warning">* Toda la información proporcionada está protegida y encriptada.</p>
+        <h4>⚠️ Importante: Verificación de Pago</h4>
+        <div class="verification-notice">
+          <p><strong>Método Seleccionado:</strong> {{ getNombreMetodo(metodoSeleccionado) }}</p>
+          <p>✅ Tu pago será registrado y quedará <strong>pendiente de verificación</strong></p>
+          <p>⏳ Nuestro equipo revisará la información proporcionada</p>
+          <p>📧 Te notificaremos cuando el pago sea aprobado</p>
+          <p>🔒 Toda la información está protegida y encriptada</p>
+        </div>
+
+        <div class="verification-steps" *ngIf="metodoSeleccionado === 'transferencia_bancaria'">
+          <h5>Proceso de Verificación:</h5>
+          <ol>
+            <li>Realiza la transferencia bancaria</li>
+            <li>Sube el comprobante de pago</li>
+            <li>Ingresa el código de operación</li>
+            <li>Envía el formulario</li>
+            <li>Espera confirmación de nuestro equipo</li>
+          </ol>
+        </div>
+
+        <div class="verification-steps" *ngIf="metodoSeleccionado === 'yape' || metodoSeleccionado === 'plin'">
+          <h5>Proceso de Verificación:</h5>
+          <ol>
+            <li>Escanea el QR o usa el número proporcionado</li>
+            <li>Realiza el pago desde tu app</li>
+            <li>Ingresa el código de verificación recibido</li>
+            <li>Envía el formulario</li>
+            <li>Espera confirmación automática</li>
+          </ol>
+        </div>
       </div>
     </div>
   </div>

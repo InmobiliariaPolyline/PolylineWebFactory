@@ -25,7 +25,7 @@ export class CategoriaService {
   getAll(): Observable<Categoria[]> {
     const q = collection(db, this.collectionName);
     return from(getDocs(q)).pipe(
-      map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Categoria)))
+      map(snapshot => snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as Categoria)))
     );
   }
 

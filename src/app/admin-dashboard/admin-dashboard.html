@@ -1,0 +1,156 @@
+<div class="dashboard-container">
+  <h1>📊 Dashboard Administrador</h1>
+
+  <!-- Mensaje informativo -->
+  <div class="info-message">
+    <div class="info-icon">💡</div>
+    <div class="info-content">
+      <h4>Información sobre los datos</h4>
+      <p>Actualmente se muestran datos de ejemplo representativos de tu negocio. Cuando realices ventas reales con categorías asignadas (CRM, Chatbot, Página Web, etc.), estos gráficos se actualizarán automáticamente con datos reales.</p>
+    </div>
+  </div>
+
+  <!-- Filtros de tiempo -->
+  <div class="filters">
+    <div class="filter-group">
+      <label for="fechaInicio">Fecha Inicio:</label>
+      <input type="date" id="fechaInicio" [value]="fechaInicio" (change)="onFechaInicioChange($event)">
+    </div>
+    <div class="filter-group">
+      <label for="fechaFin">Fecha Fin:</label>
+      <input type="date" id="fechaFin" [value]="fechaFin" (change)="onFechaFinChange($event)">
+    </div>
+    <button (click)="aplicarFiltros()">🔍 Aplicar Filtros</button>
+  </div>
+
+  <!-- Tarjetas de métricas -->
+  <div class="metrics-cards">
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <h3>Total Usuarios</h3>
+      <p>{{ totalUsuarios }}</p>
+      <div class="card-trend">+12% este mes</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🛒</div>
+      <h3>Total Ventas</h3>
+      <p>{{ totalVentas }}</p>
+      <div class="card-trend">+8% este mes</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💰</div>
+      <h3>Monto Total Ventas</h3>
+      <p>S/ {{ totalMontoVentas.toFixed(2) }}</p>
+      <div class="card-trend">+15% este mes</div>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="charts-container">
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>📊 Categorías Más Vendidas</h3>
+        <div class="chart-info">
+          <span class="metric">Top {{ categoriasVendidas.length }} categorías</span>
+          <span class="data-notice" *ngIf="categoriasVendidas.length > 0 && categoriasVendidas[0].cantidad > 50">Datos de ejemplo</span>
+        </div>
+      </div>
+      <div class="bar-chart-container">
+        <div class="bar-chart">
+          <div class="bar" *ngFor="let categoria of categoriasVendidas; let i = index"
+               [style.height.%]="getBarHeight(categoria.cantidad)"
+               [style.background]="getBarGradient(i)"
+               [title]="'Unidades: ' + categoria.cantidad">
+            <div class="bar-tooltip">
+              <strong>{{ categoria.nombre }}</strong><br>
+              {{ categoria.cantidad }} unidades
+            </div>
+            <div class="bar-value">{{ categoria.cantidad }}</div>
+          </div>
+        </div>
+        <div class="bar-labels">
+          <div class="bar-label" *ngFor="let categoria of categoriasVendidas; let i = index">
+            {{ getShortName(categoria.nombre) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>📈 Tendencia de Ventas</h3>
+        <div class="chart-info">
+          <span class="metric">{{ ventasPorTiempo.length }} meses de datos</span>
+          <span class="data-notice" *ngIf="ventasPorTiempo.length > 0 && ventasPorTiempo[0].monto > 8000">Datos de ejemplo</span>
+        </div>
+      </div>
+      <div class="line-chart-container">
+        <svg class="line-svg" viewBox="0 0 500 250" preserveAspectRatio="xMidYMid meet">
+          <!-- Grid lines -->
+          <defs>
+            <pattern id="grid" width="50" height="25" patternUnits="userSpaceOnUse">
+              <path d="M 50 0 L 0 0 0 25" fill="none" stroke="#f0f0f0" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+
+          <!-- Y-axis labels -->
+          <text *ngFor="let label of getYAxisLabels(); let i = index"
+                [attr.x]="'15'"
+                [attr.y]="getYLabelPosition(i)"
+                class="axis-label y-label"
+                text-anchor="middle">
+            {{ label }}
+          </text>
+
+          <!-- X-axis labels -->
+          <text *ngFor="let punto of ventasPorTiempo; let i = index"
+                [attr.x]="getPointX(i) + 25"
+                [attr.y]="'235'"
+                class="axis-label x-label"
+                text-anchor="middle">
+            {{ punto.mes }}
+          </text>
+
+          <!-- Area under the line -->
+          <polygon [attr.points]="getAreaPoints()"
+                   fill="url(#areaGradient)"
+                   opacity="0.3"/>
+
+          <!-- Line -->
+          <polyline [attr.points]="getLinePoints()"
+                    fill="none"
+                    stroke="url(#lineGradient)"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="line-path"/>
+
+          <!-- Data points -->
+          <circle *ngFor="let punto of ventasPorTiempo; let i = index"
+                  [attr.cx]="getPointX(i) + 25"
+                  [attr.cy]="getPointY(punto.monto)"
+                  r="6"
+                  fill="#fff"
+                  stroke="url(#lineGradient)"
+                  stroke-width="3"
+                  class="data-point">
+            <title>S/{{ punto.monto.toFixed(2) }}</title>
+          </circle>
+
+          <!-- Gradients -->
+          <defs>
+            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.3" />
+              <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.1" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>

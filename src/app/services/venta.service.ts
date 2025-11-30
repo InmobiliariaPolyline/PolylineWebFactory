@@ -26,7 +26,7 @@ export class VentaService {
   getAll(): Observable<Venta[]> {
     const q = collection(db, this.collectionName);
     return from(getDocs(q)).pipe(
-      map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Venta)))
+      map(snapshot => snapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() } as Venta)))
     );
   }
 

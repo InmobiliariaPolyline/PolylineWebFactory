@@ -1,0 +1,162 @@
+<div class="admin-pagos-container">
+  <h1>🔍 Gestión de Pagos</h1>
+
+  <!-- Filtros -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <label>Filtrar por estado:</label>
+      <select [(ngModel)]="filtroEstado" (change)="cargarPagos()">
+        <option value="todos">Todos los pagos</option>
+        <option value="pendiente">Pendientes de verificación</option>
+        <option value="aprobado">Aprobados</option>
+        <option value="rechazado">Rechazados</option>
+      </select>
+    </div>
+    <button class="btn-refresh" (click)="cargarPagos()" [disabled]="loading">
+      🔄 Actualizar
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner">⏳</div>
+    <p>Cargando pagos...</p>
+  </div>
+
+  <!-- Lista de pagos -->
+  <div class="pagos-grid" *ngIf="!loading">
+    <div class="pago-card"
+         *ngFor="let pago of pagos"
+         [class.selected]="pagoSeleccionado?.id === pago.id"
+         (click)="seleccionarPago(pago)">
+
+      <div class="pago-header">
+        <div class="pago-id">Pago #{{ pago.id.slice(-8) }}</div>
+        <div class="pago-estado" [style.color]="getEstadoColor(pago.estadoVerificacion || 'pendiente')">
+          {{ getEstadoIcon(pago.estadoVerificacion || 'pendiente') }}
+          {{ pago.estadoVerificacion || 'pendiente' }}
+        </div>
+      </div>
+
+      <div class="pago-info">
+        <div class="info-row">
+          <span class="label">Método:</span>
+          <span class="value">{{ pago.metodo }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Monto:</span>
+          <span class="value">S/ {{ pago.monto }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Fecha:</span>
+          <span class="value">{{ formatDate(pago.createdAt) }}</span>
+        </div>
+        <div class="info-row" *ngIf="pago.pedido">
+          <span class="label">Pedido:</span>
+          <span class="value">#{{ pago.pedido.id.slice(-8) }}</span>
+        </div>
+      </div>
+
+      <div class="pago-actions" *ngIf="pago.estadoVerificacion === 'pendiente'">
+        <button class="btn-approve" (click)="aprobarPago(pago); $event.stopPropagation()">
+          ✅ Aprobar
+        </button>
+        <button class="btn-reject" (click)="rechazarPago(pago); $event.stopPropagation()">
+          ❌ Rechazar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detalles del pago seleccionado -->
+  <div class="pago-details" *ngIf="pagoSeleccionado">
+    <div class="details-card">
+      <h3>Detalles del Pago</h3>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>ID del Pago:</label>
+          <span>{{ pagoSeleccionado.id }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Método de Pago:</label>
+          <span>{{ pagoSeleccionado.metodo }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Monto:</label>
+          <span>S/ {{ pagoSeleccionado.monto }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Estado:</label>
+          <span [style.color]="getEstadoColor(pagoSeleccionado.estadoVerificacion || 'pendiente')">
+            {{ getEstadoIcon(pagoSeleccionado.estadoVerificacion || 'pendiente') }}
+            {{ pagoSeleccionado.estadoVerificacion || 'pendiente' }}
+          </span>
+        </div>
+
+        <div class="detail-item">
+          <label>Fecha de Creación:</label>
+          <span>{{ formatDate(pagoSeleccionado.createdAt) }}</span>
+        </div>
+
+        <div class="detail-item" *ngIf="pagoSeleccionado.verificadoAt">
+          <label>Fecha de Verificación:</label>
+          <span>{{ formatDate(pagoSeleccionado.verificadoAt) }}</span>
+        </div>
+      </div>
+
+      <!-- Información específica del método de pago -->
+      <div class="payment-method-details" *ngIf="pagoSeleccionado.metodo === 'transferencia_bancaria' && pagoSeleccionado.datosPago">
+        <h4>📋 Datos de Transferencia</h4>
+        <div class="bank-details">
+          <p><strong>Banco Origen:</strong> {{ pagoSeleccionado.datosPago.bancoOrigen }}</p>
+          <p><strong>Cuenta Origen:</strong> {{ pagoSeleccionado.datosPago.numeroCuenta }}</p>
+          <p><strong>Titular:</strong> {{ pagoSeleccionado.datosPago.titularCuenta }}</p>
+          <p><strong>Código Operación:</strong> {{ pagoSeleccionado.datosPago.codigoOperacion || 'No proporcionado' }}</p>
+          <p *ngIf="pagoSeleccionado.datosPago.comprobante">
+            <strong>Comprobante:</strong> {{ pagoSeleccionado.datosPago.comprobante }}
+          </p>
+        </div>
+      </div>
+
+      <div class="payment-method-details" *ngIf="(pagoSeleccionado.metodo === 'yape' || pagoSeleccionado.metodo === 'plin') && pagoSeleccionado.datosPago">
+        <h4>📱 Datos de {{ pagoSeleccionado.metodo.toUpperCase() }}</h4>
+        <div class="digital-wallet-details">
+          <p><strong>Número de Teléfono:</strong> {{ pagoSeleccionado.datosPago.numeroTelefono }}</p>
+          <p><strong>Código de Verificación:</strong> {{ pagoSeleccionado.datosPago.codigoVerificacion }}</p>
+        </div>
+      </div>
+
+      <!-- Formulario de verificación -->
+      <div class="verification-form" *ngIf="pagoSeleccionado.estadoVerificacion === 'pendiente'">
+        <h4>Notas de Verificación</h4>
+        <textarea
+          [(ngModel)]="notasVerificacion"
+          placeholder="Ingrese las notas de verificación o el motivo del rechazo..."
+          rows="4">
+        </textarea>
+
+        <div class="verification-actions">
+          <button class="btn-approve" (click)="aprobarPago(pagoSeleccionado)">
+            ✅ Aprobar Pago
+          </button>
+          <button class="btn-reject" (click)="rechazarPago(pagoSeleccionado)">
+            ❌ Rechazar Pago
+          </button>
+        </div>
+      </div>
+
+      <!-- Notas existentes -->
+      <div class="existing-notes" *ngIf="pagoSeleccionado.notasVerificacion">
+        <h4>Notas Anteriores</h4>
+        <p>{{ pagoSeleccionado.notasVerificacion }}</p>
+        <p *ngIf="pagoSeleccionado.verificadoPor">
+          <small>Verificado por: {{ pagoSeleccionado.verificadoPor }}</small>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
